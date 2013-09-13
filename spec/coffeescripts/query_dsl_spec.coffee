@@ -532,3 +532,22 @@ describe 'QueryDSL', ->
     expect(json).toEqual({query:{
       span_term: { field: "value1" }
     }})
+
+  it 'top_children', ->
+    json = @subject.query ->
+      @top_children {type: "blog_tag", score: "max", factor: 5, incremental_factor: 2}, ->
+        @query ->
+          @term {tag: "something"}
+
+    expect(json).toEqual({query: {
+      top_children: {
+        type: "blog_tag",
+        score: "max",
+        factor: 5,
+        incremental_factor: 2,
+        query: {
+          term: {tag: "something"}
+        }
+      }
+    }})
+

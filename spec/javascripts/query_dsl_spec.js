@@ -1012,7 +1012,7 @@
         }
       });
     });
-    return it('span_term', function() {
+    it('span_term', function() {
       var json;
       json = this.subject.query(function() {
         return this.span_term({
@@ -1023,6 +1023,38 @@
         query: {
           span_term: {
             field: "value1"
+          }
+        }
+      });
+    });
+    return it('top_children', function() {
+      var json;
+      json = this.subject.query(function() {
+        return this.top_children({
+          type: "blog_tag",
+          score: "max",
+          factor: 5,
+          incremental_factor: 2
+        }, function() {
+          return this.query(function() {
+            return this.term({
+              tag: "something"
+            });
+          });
+        });
+      });
+      return expect(json).toEqual({
+        query: {
+          top_children: {
+            type: "blog_tag",
+            score: "max",
+            factor: 5,
+            incremental_factor: 2,
+            query: {
+              term: {
+                tag: "something"
+              }
+            }
           }
         }
       });

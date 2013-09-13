@@ -391,6 +391,15 @@
       return this._addWithFunction('span_or', options, fun);
     };
 
+    /*
+      http://www.elasticsearch.org/guide/reference/query-dsl/top-children-query/
+    */
+
+
+    QueryDSL.prototype.top_children = function(options, fun) {
+      return this._addWithFunction('top_children', options, fun);
+    };
+
     QueryDSL.prototype._extractFun = function(options, fun, optionsType) {
       var _options;
       if (optionsType == null) {

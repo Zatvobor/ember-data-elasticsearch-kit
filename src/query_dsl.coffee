@@ -306,6 +306,13 @@ class @QueryDSL
   span_or: (options, fun) ->
     @_addWithFunction('span_or', options, fun)
 
+  ###
+    http://www.elasticsearch.org/guide/reference/query-dsl/top-children-query/
+  ###
+
+  top_children: (options, fun) ->
+    @_addWithFunction('top_children', options, fun)
+
 
 
 
