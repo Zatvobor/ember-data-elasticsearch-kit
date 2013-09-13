@@ -14,6 +14,14 @@
       return this._query;
     };
 
+    QueryDSL.filter = function(fun) {
+      this._query = {
+        filter: {}
+      };
+      fun.call(new QueryDSL(this._query.filter));
+      return this._query;
+    };
+
     QueryDSL.prototype.query = function(options, fun) {
       return this._addWithFunction('query', options, fun);
     };
@@ -426,6 +434,123 @@
 
     QueryDSL.prototype.filters = function(options, fun) {
       return this._addWithFunction('filters', options, fun, []);
+    };
+
+    /*
+      http://www.elasticsearch.org/guide/reference/query-dsl/and-filter/
+    */
+
+
+    QueryDSL.prototype.and = function(options, fun) {
+      return this._addWithFunction('and', options, fun);
+    };
+
+    /*
+      http://www.elasticsearch.org/guide/reference/query-dsl/exists-filter/
+    */
+
+
+    QueryDSL.prototype.exists = function(options) {
+      return this._add('exist', options);
+    };
+
+    /*
+      http://www.elasticsearch.org/guide/reference/query-dsl/limit-filter/
+    */
+
+
+    QueryDSL.prototype.limit = function(options) {
+      return this._add('limit', options);
+    };
+
+    /*
+      http://www.elasticsearch.org/guide/reference/query-dsl/type-filter/
+    */
+
+
+    QueryDSL.prototype.type = function(options) {
+      return this._add('type', options);
+    };
+
+    /*
+      http://www.elasticsearch.org/guide/reference/query-dsl/geo-bounding-box-filter/
+    */
+
+
+    QueryDSL.prototype.geo_bounding_box = function(options) {
+      return this._add('geo_bounding_box', options);
+    };
+
+    /*
+      http://www.elasticsearch.org/guide/reference/query-dsl/geo-distance-filter/
+    */
+
+
+    QueryDSL.prototype.geo_distance = function(options) {
+      return this._add('geo_distance', options);
+    };
+
+    /*
+      http://www.elasticsearch.org/guide/reference/query-dsl/geo-distance-range-filter/
+    */
+
+
+    QueryDSL.prototype.geo_distance_range = function(options) {
+      return this._add('geo_distance_range', options);
+    };
+
+    /*
+      http://www.elasticsearch.org/guide/reference/query-dsl/geo-polygon-filter/
+    */
+
+
+    QueryDSL.prototype.geo_polygon = function(options) {
+      return this._add('geo_polygon', options);
+    };
+
+    /*
+      http://www.elasticsearch.org/guide/reference/query-dsl/missing-filter/
+    */
+
+
+    QueryDSL.prototype.missing = function(options) {
+      return this._add('missing', options);
+    };
+
+    /*
+      http://www.elasticsearch.org/guide/reference/query-dsl/not-filter/
+    */
+
+
+    QueryDSL.prototype.not = function(options, fun) {
+      return this._addWithFunction('not', options, fun);
+    };
+
+    /*
+      http://www.elasticsearch.org/guide/reference/query-dsl/numeric-range-filter/
+    */
+
+
+    QueryDSL.prototype.numeric_range = function(options) {
+      return this._add('numeric_range', options);
+    };
+
+    /*
+      http://www.elasticsearch.org/guide/reference/query-dsl/or-filter/
+    */
+
+
+    QueryDSL.prototype.or = function(options, fun) {
+      return this._addWithFunction('or', options, fun);
+    };
+
+    /*
+      http://www.elasticsearch.org/guide/reference/query-dsl/script-filter/
+    */
+
+
+    QueryDSL.prototype.script = function(options) {
+      return this._add('script', options);
     };
 
     QueryDSL.prototype._extractFun = function(options, fun, optionsType) {

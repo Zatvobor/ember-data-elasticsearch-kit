@@ -10,6 +10,11 @@ class @QueryDSL
     fun.call(new QueryDSL(@_query.query))
     @_query
 
+  @filter: (fun) ->
+    @_query = {filter: {}}
+    fun.call(new QueryDSL(@_query.filter))
+    @_query
+
   #for dsl query
   query: (options, fun) ->
     @_addWithFunction('query', options, fun)
@@ -333,10 +338,99 @@ class @QueryDSL
   no_match_query: (options, fun) ->
     @_addWithFunction('no_match_query', options, fun)
 
-
-
   filters: (options, fun) ->
     @_addWithFunction('filters', options, fun, [])
+
+  ###
+    http://www.elasticsearch.org/guide/reference/query-dsl/and-filter/
+  ###
+
+  and: (options, fun) ->
+    @_addWithFunction('and', options, fun)
+
+  ###
+    http://www.elasticsearch.org/guide/reference/query-dsl/exists-filter/
+  ###
+
+  exists: (options) ->
+    @_add('exist', options)
+
+  ###
+    http://www.elasticsearch.org/guide/reference/query-dsl/limit-filter/
+  ###
+
+  limit: (options) ->
+    @_add('limit', options)
+
+  ###
+    http://www.elasticsearch.org/guide/reference/query-dsl/type-filter/
+  ###
+
+  type: (options) ->
+    @_add('type', options)
+
+  ###
+    http://www.elasticsearch.org/guide/reference/query-dsl/geo-bounding-box-filter/
+  ###
+
+  geo_bounding_box: (options) ->
+    @_add('geo_bounding_box', options)
+
+  ###
+    http://www.elasticsearch.org/guide/reference/query-dsl/geo-distance-filter/
+  ###
+
+  geo_distance: (options) ->
+    @_add('geo_distance', options)
+
+  ###
+    http://www.elasticsearch.org/guide/reference/query-dsl/geo-distance-range-filter/
+  ###
+
+  geo_distance_range: (options) ->
+    @_add('geo_distance_range', options)
+
+  ###
+    http://www.elasticsearch.org/guide/reference/query-dsl/geo-polygon-filter/
+  ###
+
+  geo_polygon: (options) ->
+    @_add('geo_polygon', options)
+
+  ###
+    http://www.elasticsearch.org/guide/reference/query-dsl/missing-filter/
+  ###
+
+  missing: (options) ->
+    @_add('missing', options)
+
+  ###
+    http://www.elasticsearch.org/guide/reference/query-dsl/not-filter/
+  ###
+
+  not: (options, fun) ->
+    @_addWithFunction('not', options, fun)
+
+  ###
+    http://www.elasticsearch.org/guide/reference/query-dsl/numeric-range-filter/
+  ###
+
+  numeric_range: (options) ->
+    @_add('numeric_range', options)
+
+  ###
+    http://www.elasticsearch.org/guide/reference/query-dsl/or-filter/
+  ###
+
+  or: (options, fun) ->
+    @_addWithFunction('or', options, fun)
+
+  ###
+    http://www.elasticsearch.org/guide/reference/query-dsl/script-filter/
+  ###
+
+  script: (options) ->
+    @_add('script', options)
 
   #private methods
 

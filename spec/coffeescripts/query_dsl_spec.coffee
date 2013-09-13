@@ -628,3 +628,168 @@ describe 'QueryDSL', ->
         }
       }
     }})
+
+
+  it 'and filter', ->
+    json = @subject.filter ->
+      @and ->
+        @filters ->
+          @term {tag: "value"}
+          @term {tag: "value1"}
+
+    expect(json).toEqual({filter: {
+      and:{
+        filters: [{
+          term: {tag: "value"}},
+        {term: {tag: "value1"}}]
+      }
+    }})
+
+  it 'exists filter', ->
+    json = @subject.filter ->
+      @exists {field: 'user'}
+
+    expect(json).toEqual({filter: {
+      exist: {field: 'user'}
+    }})
+
+  it 'limit filter', ->
+    json = @subject.filter ->
+      @limit {value: 100}
+
+    expect(json).toEqual({filter: {limit: {value: 100}}})
+
+  it 'type filter', ->
+    json = @subject.filter ->
+      @type {value: "my_type"}
+
+    expect(json).toEqual({filter: {type: {value: "my_type"}}})
+
+  it 'geo_bounding_box', ->
+    json = @subject.filter ->
+      @geo_bounding_box(
+        "pin.location" : {
+          "top_left" : {
+            "lat" : 40.73,
+            "lon" : -74.1
+          },
+          "bottom_right" : {
+            "lat" : 40.01,
+            "lon" : -71.12
+          }
+        }
+      )
+
+    expect(json).toEqual({filter: {
+      geo_bounding_box:{
+        "pin.location" : {
+          "top_left" : {
+            "lat" : 40.73,
+            "lon" : -74.1
+          },
+          "bottom_right" : {
+            "lat" : 40.01,
+            "lon" : -71.12
+          }
+        }
+      }
+    }})
+
+  it 'geo_distance', ->
+    json = @subject.filter ->
+      @geo_distance {distance: "12km", "pin.location" : [40, -70]}
+
+    expect(json).toEqual({filter: {geo_distance: {distance: "12km", "pin.location" : [40, -70]}}})
+
+  it 'geo_distance_range', ->
+    json = @subject.filter ->
+      @geo_distance_range({
+        "from" : "200km",
+        "to" : "400km"
+        "pin.location" : {
+          "lat" : 40,
+          "lon" : -70
+        }
+      })
+    expect(json).toEqual({filter: {geo_distance_range: {
+      "from" : "200km",
+      "to" : "400km"
+      "pin.location" : {
+        "lat" : 40,
+        "lon" : -70
+      }
+    }}})
+
+  it 'geo_polygon', ->
+    json = @subject.filter ->
+      @geo_polygon({
+        "person.location": {
+          "points": [
+            [-70, 40],
+            [-80, 30],
+            [-90, 20]
+          ]
+        }
+      })
+
+    expect(json).toEqual({filter: {
+      geo_polygon: {
+        "person.location": {
+          "points": [ [-70, 40],
+            [-80, 30],
+            [-90, 20]
+          ]
+        }
+      }
+    }})
+
+  it 'missing filter', ->
+    json = @subject.filter ->
+      @missing {field: "user"}
+
+    expect(json).toEqual({filter: {missing: {field: "user"}}})
+
+  it 'not filter', ->
+    json = @subject.filter ->
+      @not ->
+        @filter ->
+          @range {postDate: {from: "2010-03-01", to: "2010-04-01"}}
+
+    expect(json).toEqual({filter: {
+      not: {
+        filter:{
+          range: {postDate: {from: "2010-03-01", to: "2010-04-01"}}
+        }
+      }
+    }})
+
+  it 'numeric_range', ->
+    json = @subject.filter ->
+      @numeric_range {age: {"from" : "10", "to" : "20", "include_lower" : true, "include_upper" : false}}
+
+    expect(json).toEqual({filter: {
+      numeric_range: {age: {"from" : "10", "to" : "20", "include_lower" : true, "include_upper" : false}}
+    }})
+
+  it 'or filter', ->
+    json = @subject.filter ->
+      @or ->
+        @filters ->
+          @term {"name.second" : "banon"}
+          @term {"name.nick" : "kimchy"}
+
+    expect(json).toEqual({filter: {
+      or: {filters: [{term: {"name.second" : "banon"}},
+        {term: {"name.nick" : "kimchy"}}
+      ]}
+    }})
+
+  it 'script filter', ->
+    json = @subject.filter ->
+      @script {"script" : "doc['num1'].value &gt; 1"}
+
+    expect(json).toEqual({filter: {
+      script: {
+        script: "doc['num1'].value &gt; 1"
+      }
+    }})

@@ -1108,7 +1108,7 @@
         }
       });
     });
-    return it('indices', function() {
+    it('indices', function() {
       var json;
       json = this.subject.query(function() {
         return this.indices({
@@ -1140,6 +1140,293 @@
                 tag: 'kow'
               }
             }
+          }
+        }
+      });
+    });
+    it('and filter', function() {
+      var json;
+      json = this.subject.filter(function() {
+        return this.and(function() {
+          return this.filters(function() {
+            this.term({
+              tag: "value"
+            });
+            return this.term({
+              tag: "value1"
+            });
+          });
+        });
+      });
+      return expect(json).toEqual({
+        filter: {
+          and: {
+            filters: [
+              {
+                term: {
+                  tag: "value"
+                }
+              }, {
+                term: {
+                  tag: "value1"
+                }
+              }
+            ]
+          }
+        }
+      });
+    });
+    it('exists filter', function() {
+      var json;
+      json = this.subject.filter(function() {
+        return this.exists({
+          field: 'user'
+        });
+      });
+      return expect(json).toEqual({
+        filter: {
+          exist: {
+            field: 'user'
+          }
+        }
+      });
+    });
+    it('limit filter', function() {
+      var json;
+      json = this.subject.filter(function() {
+        return this.limit({
+          value: 100
+        });
+      });
+      return expect(json).toEqual({
+        filter: {
+          limit: {
+            value: 100
+          }
+        }
+      });
+    });
+    it('type filter', function() {
+      var json;
+      json = this.subject.filter(function() {
+        return this.type({
+          value: "my_type"
+        });
+      });
+      return expect(json).toEqual({
+        filter: {
+          type: {
+            value: "my_type"
+          }
+        }
+      });
+    });
+    it('geo_bounding_box', function() {
+      var json;
+      json = this.subject.filter(function() {
+        return this.geo_bounding_box({
+          "pin.location": {
+            "top_left": {
+              "lat": 40.73,
+              "lon": -74.1
+            },
+            "bottom_right": {
+              "lat": 40.01,
+              "lon": -71.12
+            }
+          }
+        });
+      });
+      return expect(json).toEqual({
+        filter: {
+          geo_bounding_box: {
+            "pin.location": {
+              "top_left": {
+                "lat": 40.73,
+                "lon": -74.1
+              },
+              "bottom_right": {
+                "lat": 40.01,
+                "lon": -71.12
+              }
+            }
+          }
+        }
+      });
+    });
+    it('geo_distance', function() {
+      var json;
+      json = this.subject.filter(function() {
+        return this.geo_distance({
+          distance: "12km",
+          "pin.location": [40, -70]
+        });
+      });
+      return expect(json).toEqual({
+        filter: {
+          geo_distance: {
+            distance: "12km",
+            "pin.location": [40, -70]
+          }
+        }
+      });
+    });
+    it('geo_distance_range', function() {
+      var json;
+      json = this.subject.filter(function() {
+        return this.geo_distance_range({
+          "from": "200km",
+          "to": "400km",
+          "pin.location": {
+            "lat": 40,
+            "lon": -70
+          }
+        });
+      });
+      return expect(json).toEqual({
+        filter: {
+          geo_distance_range: {
+            "from": "200km",
+            "to": "400km",
+            "pin.location": {
+              "lat": 40,
+              "lon": -70
+            }
+          }
+        }
+      });
+    });
+    it('geo_polygon', function() {
+      var json;
+      json = this.subject.filter(function() {
+        return this.geo_polygon({
+          "person.location": {
+            "points": [[-70, 40], [-80, 30], [-90, 20]]
+          }
+        });
+      });
+      return expect(json).toEqual({
+        filter: {
+          geo_polygon: {
+            "person.location": {
+              "points": [[-70, 40], [-80, 30], [-90, 20]]
+            }
+          }
+        }
+      });
+    });
+    it('missing filter', function() {
+      var json;
+      json = this.subject.filter(function() {
+        return this.missing({
+          field: "user"
+        });
+      });
+      return expect(json).toEqual({
+        filter: {
+          missing: {
+            field: "user"
+          }
+        }
+      });
+    });
+    it('not filter', function() {
+      var json;
+      json = this.subject.filter(function() {
+        return this.not(function() {
+          return this.filter(function() {
+            return this.range({
+              postDate: {
+                from: "2010-03-01",
+                to: "2010-04-01"
+              }
+            });
+          });
+        });
+      });
+      return expect(json).toEqual({
+        filter: {
+          not: {
+            filter: {
+              range: {
+                postDate: {
+                  from: "2010-03-01",
+                  to: "2010-04-01"
+                }
+              }
+            }
+          }
+        }
+      });
+    });
+    it('numeric_range', function() {
+      var json;
+      json = this.subject.filter(function() {
+        return this.numeric_range({
+          age: {
+            "from": "10",
+            "to": "20",
+            "include_lower": true,
+            "include_upper": false
+          }
+        });
+      });
+      return expect(json).toEqual({
+        filter: {
+          numeric_range: {
+            age: {
+              "from": "10",
+              "to": "20",
+              "include_lower": true,
+              "include_upper": false
+            }
+          }
+        }
+      });
+    });
+    it('or filter', function() {
+      var json;
+      json = this.subject.filter(function() {
+        return this.or(function() {
+          return this.filters(function() {
+            this.term({
+              "name.second": "banon"
+            });
+            return this.term({
+              "name.nick": "kimchy"
+            });
+          });
+        });
+      });
+      return expect(json).toEqual({
+        filter: {
+          or: {
+            filters: [
+              {
+                term: {
+                  "name.second": "banon"
+                }
+              }, {
+                term: {
+                  "name.nick": "kimchy"
+                }
+              }
+            ]
+          }
+        }
+      });
+    });
+    return it('script filter', function() {
+      var json;
+      json = this.subject.filter(function() {
+        return this.script({
+          "script": "doc['num1'].value &gt; 1"
+        });
+      });
+      return expect(json).toEqual({
+        filter: {
+          script: {
+            script: "doc['num1'].value &gt; 1"
           }
         }
       });
