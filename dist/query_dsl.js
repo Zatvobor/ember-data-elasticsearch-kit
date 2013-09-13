@@ -15,12 +15,7 @@
     };
 
     QueryDSL.prototype.query = function(options, fun) {
-      var _options, _ref;
-      _ref = this._extractFun(options, fun), _options = _ref[0], fun = _ref[1];
-      this._add('query', _options);
-      if (fun) {
-        return fun.call(new QueryDSL(_options.query));
-      }
+      return this._addWithFunction('query', options, fun);
     };
 
     /*
@@ -222,11 +217,35 @@
       return this._add('geo_shape', options);
     };
 
-    QueryDSL.prototype._extractFun = function(options, fun) {
+    /*
+      http://www.elasticsearch.org/guide/reference/query-dsl/bool-query/
+    */
+
+
+    QueryDSL.prototype.bool = function(options, fun) {
+      return this._addWithFunction('bool', options, fun);
+    };
+
+    QueryDSL.prototype.must = function(options, fun) {
+      return this._addWithFunction('must', options, fun, []);
+    };
+
+    QueryDSL.prototype.must_not = function(options, fun) {
+      return this._addWithFunction('must_not', options, fun, []);
+    };
+
+    QueryDSL.prototype.should = function(options, fun) {
+      return this._addWithFunction('should', options, fun, []);
+    };
+
+    QueryDSL.prototype._extractFun = function(options, fun, optionsType) {
       var _options;
+      if (optionsType == null) {
+        optionsType = {};
+      }
       if (typeof options === 'function') {
         fun = options;
-        _options = {};
+        _options = optionsType;
       } else {
         _options = options;
       }
@@ -242,7 +261,19 @@
       } else {
         this._query[type] = options;
       }
-      return params[type];
+      return params;
+    };
+
+    QueryDSL.prototype._addWithFunction = function(type, options, fun, optionsType) {
+      var _options, _ref;
+      if (optionsType == null) {
+        optionsType = {};
+      }
+      _ref = this._extractFun(options, fun, optionsType), _options = _ref[0], fun = _ref[1];
+      _options = this._add(type, _options);
+      if (fun) {
+        return fun.call(new QueryDSL(_options[type]));
+      }
     };
 
     return QueryDSL;

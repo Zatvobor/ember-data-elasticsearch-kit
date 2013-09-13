@@ -225,3 +225,66 @@ describe 'QueryDSL', ->
         }
       }
     })
+
+  it 'bool query with must', ->
+    json = @subject.query ->
+      @bool ->
+        @must ->
+          @term {user: "kimchy"}
+
+    expect(json).toEqual({query:{
+      bool: {
+        must: [{term: {user: "kimchy"}}]
+      }
+    }})
+
+  it 'bool query with should', ->
+    json = @subject.query ->
+      @bool ->
+        @should ->
+          @term {user: "kimchy"}
+
+    expect(json).toEqual({query:{
+      bool: {
+        should: [{term: {user: "kimchy"}}]
+      }
+    }})
+
+  it 'bool query with must and should', ->
+    json = @subject.query ->
+      @bool ->
+        @must ->
+          @term {user: "kimchy"}
+          @term {message: "my message"}
+        @should ->
+          @term {user: "k"}
+          @term {message: 'm'}
+
+    expect(json).toEqual({
+      query:{bool:{
+        must: [{term: {user: "kimchy"}}, {term: {message: "my message"}}  ],
+        should: [{term: {user: "k"}}, {term: {message: "m"}}]
+      }}
+    })
+
+  it 'bool query with all matchers', ->
+    json = @subject.query ->
+      @bool ->
+        @must ->
+          @term {user: "kimchy"}
+          @term {message: "my message"}
+
+        @should ->
+          @term {user: "k"}
+          @term {message: 'm'}
+
+        @must_not ->
+          @term {user: "Dart"}
+
+    expect(json).toEqual({query:{
+      bool:{
+        must: [{term: {user: "kimchy"}}, {term: {message: "my message"}}  ],
+        should: [{term: {user: "k"}}, {term: {message: "m"}}],
+        must_not: [{term: {user: "Dart"}}]
+      }
+    }})

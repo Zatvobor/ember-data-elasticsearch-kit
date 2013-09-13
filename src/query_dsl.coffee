@@ -12,10 +12,7 @@ class @QueryDSL
 
   #for dsl query
   query: (options, fun) ->
-    [_options, fun] = @_extractFun(options, fun)
-    @_add('query', _options)
-    if fun
-      fun.call(new QueryDSL(_options.query))
+    @_addWithFunction('query', options, fun)
 
   ###
     http://www.elasticsearch.org/guide/reference/query-dsl/match-query/
@@ -172,14 +169,30 @@ class @QueryDSL
   geo_shape: (options) ->
     @_add('geo_shape', options)
 
+  ###
+    http://www.elasticsearch.org/guide/reference/query-dsl/bool-query/
+  ###
+
+  bool: (options, fun) ->
+    @_addWithFunction('bool', options, fun)
+
+  must: (options, fun) ->
+    @_addWithFunction('must', options, fun, [])
+
+  must_not: (options, fun) ->
+    @_addWithFunction('must_not', options, fun, [])
+
+  should: (options, fun) ->
+    @_addWithFunction('should', options, fun, [])
+
 
 
   #private methods
 
-  _extractFun: (options, fun) ->
+  _extractFun: (options, fun, optionsType={}) ->
     if typeof options == 'function'
       fun = options
-      _options = {}
+      _options = optionsType
     else
       _options = options
     [_options, fun]
@@ -191,4 +204,10 @@ class @QueryDSL
       @_query.push(params)
     else
       @_query[type] = options
-    params[type]
+    params
+
+  _addWithFunction: (type, options, fun, optionsType={}) ->
+    [_options, fun] = @_extractFun(options, fun, optionsType)
+    _options = @_add(type, _options)
+    if fun
+      fun.call(new QueryDSL(_options[type]))

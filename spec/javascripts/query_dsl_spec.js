@@ -376,7 +376,7 @@
         }
       });
     });
-    return it('geo_shape', function() {
+    it('geo_shape', function() {
       var json;
       json = this.subject.query(function() {
         return this.geo_shape({
@@ -397,6 +397,170 @@
                 "coordinates": [[13, 53], [14, 52]]
               }
             }
+          }
+        }
+      });
+    });
+    it('bool query with must', function() {
+      var json;
+      json = this.subject.query(function() {
+        return this.bool(function() {
+          return this.must(function() {
+            return this.term({
+              user: "kimchy"
+            });
+          });
+        });
+      });
+      return expect(json).toEqual({
+        query: {
+          bool: {
+            must: [
+              {
+                term: {
+                  user: "kimchy"
+                }
+              }
+            ]
+          }
+        }
+      });
+    });
+    it('bool query with should', function() {
+      var json;
+      json = this.subject.query(function() {
+        return this.bool(function() {
+          return this.should(function() {
+            return this.term({
+              user: "kimchy"
+            });
+          });
+        });
+      });
+      return expect(json).toEqual({
+        query: {
+          bool: {
+            should: [
+              {
+                term: {
+                  user: "kimchy"
+                }
+              }
+            ]
+          }
+        }
+      });
+    });
+    it('bool query with must and should', function() {
+      var json;
+      json = this.subject.query(function() {
+        return this.bool(function() {
+          this.must(function() {
+            this.term({
+              user: "kimchy"
+            });
+            return this.term({
+              message: "my message"
+            });
+          });
+          return this.should(function() {
+            this.term({
+              user: "k"
+            });
+            return this.term({
+              message: 'm'
+            });
+          });
+        });
+      });
+      return expect(json).toEqual({
+        query: {
+          bool: {
+            must: [
+              {
+                term: {
+                  user: "kimchy"
+                }
+              }, {
+                term: {
+                  message: "my message"
+                }
+              }
+            ],
+            should: [
+              {
+                term: {
+                  user: "k"
+                }
+              }, {
+                term: {
+                  message: "m"
+                }
+              }
+            ]
+          }
+        }
+      });
+    });
+    return it('bool query with all matchers', function() {
+      var json;
+      json = this.subject.query(function() {
+        return this.bool(function() {
+          this.must(function() {
+            this.term({
+              user: "kimchy"
+            });
+            return this.term({
+              message: "my message"
+            });
+          });
+          this.should(function() {
+            this.term({
+              user: "k"
+            });
+            return this.term({
+              message: 'm'
+            });
+          });
+          return this.must_not(function() {
+            return this.term({
+              user: "Dart"
+            });
+          });
+        });
+      });
+      return expect(json).toEqual({
+        query: {
+          bool: {
+            must: [
+              {
+                term: {
+                  user: "kimchy"
+                }
+              }, {
+                term: {
+                  message: "my message"
+                }
+              }
+            ],
+            should: [
+              {
+                term: {
+                  user: "k"
+                }
+              }, {
+                term: {
+                  message: "m"
+                }
+              }
+            ],
+            must_not: [
+              {
+                term: {
+                  user: "Dart"
+                }
+              }
+            ]
           }
         }
       });
