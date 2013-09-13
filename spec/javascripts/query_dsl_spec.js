@@ -1059,7 +1059,7 @@
         }
       });
     });
-    return it('nested', function() {
+    it('nested', function() {
       var json;
       json = this.subject.query(function() {
         return this.nested({
@@ -1102,6 +1102,42 @@
                     }
                   }
                 ]
+              }
+            }
+          }
+        }
+      });
+    });
+    return it('indices', function() {
+      var json;
+      json = this.subject.query(function() {
+        return this.indices({
+          indices: ["index1", "index2"]
+        }, function() {
+          this.query(function() {
+            return this.term({
+              tag: "wow"
+            });
+          });
+          return this.no_match_query(function() {
+            return this.term({
+              tag: "kow"
+            });
+          });
+        });
+      });
+      return expect(json).toEqual({
+        query: {
+          indices: {
+            indices: ["index1", "index2"],
+            query: {
+              term: {
+                tag: "wow"
+              }
+            },
+            no_match_query: {
+              term: {
+                tag: 'kow'
               }
             }
           }

@@ -404,6 +404,30 @@
       return this._addWithFunction('nested', options, fun);
     };
 
+    /*
+      http://www.elasticsearch.org/guide/reference/query-dsl/custom-filters-score-query/
+    */
+
+
+    QueryDSL.prototype.custom_filters_score = function(options, fun) {};
+
+    /*
+      http://www.elasticsearch.org/guide/reference/query-dsl/indices-query/
+    */
+
+
+    QueryDSL.prototype.indices = function(options, fun) {
+      return this._addWithFunction('indices', options, fun);
+    };
+
+    QueryDSL.prototype.no_match_query = function(options, fun) {
+      return this._addWithFunction('no_match_query', options, fun);
+    };
+
+    QueryDSL.prototype.filters = function(options, fun) {
+      return this._addWithFunction('filters', options, fun, []);
+    };
+
     QueryDSL.prototype._extractFun = function(options, fun, optionsType) {
       var _options;
       if (optionsType == null) {

@@ -316,11 +316,27 @@ class @QueryDSL
   nested: (options, fun) ->
     @_addWithFunction('nested', options, fun)
 
+  ###
+    http://www.elasticsearch.org/guide/reference/query-dsl/custom-filters-score-query/
+  ###
+
+  custom_filters_score: (options, fun) ->
+#    @_addWithFunction('custom_filters_score', options, fun)
+
+  ###
+    http://www.elasticsearch.org/guide/reference/query-dsl/indices-query/
+  ###
+
+  indices: (options, fun) ->
+    @_addWithFunction('indices', options, fun)
+
+  no_match_query: (options, fun) ->
+    @_addWithFunction('no_match_query', options, fun)
 
 
 
-
-
+  filters: (options, fun) ->
+    @_addWithFunction('filters', options, fun, [])
 
   #private methods
 
