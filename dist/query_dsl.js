@@ -18,6 +18,10 @@
       return this._addWithFunction('query', options, fun);
     };
 
+    QueryDSL.prototype.filter = function(options, fun) {
+      return this._addWithFunction('filter', options, fun);
+    };
+
     /*
       http://www.elasticsearch.org/guide/reference/query-dsl/match-query/
     */
@@ -297,6 +301,15 @@
 
     QueryDSL.prototype.queries = function(options, fun) {
       return this._addWithFunction('queries', options, fun, []);
+    };
+
+    /*
+      http://www.elasticsearch.org/guide/reference/query-dsl/filtered-query/
+    */
+
+
+    QueryDSL.prototype.filtered = function(options, fun) {
+      return this._addWithFunction('filtered', options, fun);
     };
 
     QueryDSL.prototype._extractFun = function(options, fun, optionsType) {

@@ -14,6 +14,9 @@ class @QueryDSL
   query: (options, fun) ->
     @_addWithFunction('query', options, fun)
 
+  filter: (options, fun) ->
+    @_addWithFunction('filter', options, fun)
+
   ###
     http://www.elasticsearch.org/guide/reference/query-dsl/match-query/
   ###
@@ -233,6 +236,14 @@ class @QueryDSL
 
   queries: (options, fun) ->
     @_addWithFunction('queries', options, fun, [])
+
+
+  ###
+    http://www.elasticsearch.org/guide/reference/query-dsl/filtered-query/
+  ###
+
+  filtered: (options, fun) ->
+    @_addWithFunction('filtered', options, fun)
 
   #private methods
 

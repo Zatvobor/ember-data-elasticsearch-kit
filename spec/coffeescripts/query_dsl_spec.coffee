@@ -394,3 +394,24 @@ describe 'QueryDSL', ->
         }]
       }
     }})
+
+  it 'filtered', ->
+    json = @subject.query ->
+      @filtered ->
+        @query ->
+          @term {tag: "wow"}
+        @filter ->
+          @range {age: {from: 10, to: 20}}
+
+    expect(json).toEqual({query:{
+      filtered:{
+        query: {
+          term: { tag: 'wow' }
+        },
+        filter: {
+          range: {
+            age: { from: 10, to: 20 }
+          }
+        }
+      }
+    }})

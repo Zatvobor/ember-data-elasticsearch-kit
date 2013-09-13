@@ -713,7 +713,7 @@
         }
       });
     });
-    return it('dis_max', function() {
+    it('dis_max', function() {
       var json;
       json = this.subject.query(function() {
         return this.dis_max({
@@ -746,6 +746,45 @@
                 }
               }
             ]
+          }
+        }
+      });
+    });
+    return it('filtered', function() {
+      var json;
+      json = this.subject.query(function() {
+        return this.filtered(function() {
+          this.query(function() {
+            return this.term({
+              tag: "wow"
+            });
+          });
+          return this.filter(function() {
+            return this.range({
+              age: {
+                from: 10,
+                to: 20
+              }
+            });
+          });
+        });
+      });
+      return expect(json).toEqual({
+        query: {
+          filtered: {
+            query: {
+              term: {
+                tag: 'wow'
+              }
+            },
+            filter: {
+              range: {
+                age: {
+                  from: 10,
+                  to: 20
+                }
+              }
+            }
           }
         }
       });
