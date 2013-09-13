@@ -750,7 +750,7 @@
         }
       });
     });
-    return it('filtered', function() {
+    it('filtered', function() {
       var json;
       json = this.subject.query(function() {
         return this.filtered(function() {
@@ -783,6 +783,58 @@
                   from: 10,
                   to: 20
                 }
+              }
+            }
+          }
+        }
+      });
+    });
+    it('has_child', function() {
+      var json;
+      json = this.subject.query(function() {
+        return this.has_child({
+          type: "blog_tag"
+        }, function() {
+          return this.query(function() {
+            return this.term({
+              tag: "something"
+            });
+          });
+        });
+      });
+      return expect(json).toEqual({
+        query: {
+          has_child: {
+            type: "blog_tag",
+            query: {
+              term: {
+                tag: "something"
+              }
+            }
+          }
+        }
+      });
+    });
+    return it('has_parent', function() {
+      var json;
+      json = this.subject.query(function() {
+        return this.has_parent({
+          parent_type: "blog_tag"
+        }, function() {
+          return this.query(function() {
+            return this.term({
+              tag: "something"
+            });
+          });
+        });
+      });
+      return expect(json).toEqual({
+        query: {
+          has_parent: {
+            parent_type: "blog_tag",
+            query: {
+              term: {
+                tag: "something"
               }
             }
           }

@@ -312,6 +312,24 @@
       return this._addWithFunction('filtered', options, fun);
     };
 
+    /*
+      http://www.elasticsearch.org/guide/reference/query-dsl/has-child-query/
+    */
+
+
+    QueryDSL.prototype.has_child = function(options, fun) {
+      return this._addWithFunction('has_child', options, fun);
+    };
+
+    /*
+      http://www.elasticsearch.org/guide/reference/query-dsl/has-parent-query/
+    */
+
+
+    QueryDSL.prototype.has_parent = function(options, fun) {
+      return this._addWithFunction('has_parent', options, fun);
+    };
+
     QueryDSL.prototype._extractFun = function(options, fun, optionsType) {
       var _options;
       if (optionsType == null) {

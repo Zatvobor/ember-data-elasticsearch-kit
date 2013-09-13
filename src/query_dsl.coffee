@@ -245,6 +245,20 @@ class @QueryDSL
   filtered: (options, fun) ->
     @_addWithFunction('filtered', options, fun)
 
+  ###
+    http://www.elasticsearch.org/guide/reference/query-dsl/has-child-query/
+  ###
+
+  has_child: (options, fun) ->
+    @_addWithFunction('has_child', options, fun)
+
+  ###
+    http://www.elasticsearch.org/guide/reference/query-dsl/has-parent-query/
+  ###
+
+  has_parent: (options, fun) ->
+    @_addWithFunction('has_parent', options, fun)
+
   #private methods
 
   _extractFun: (options, fun, optionsType={}) ->

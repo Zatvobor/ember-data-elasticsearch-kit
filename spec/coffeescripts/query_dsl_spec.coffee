@@ -415,3 +415,33 @@ describe 'QueryDSL', ->
         }
       }
     }})
+
+  it 'has_child', ->
+    json = @subject.query ->
+      @has_child {type: "blog_tag"}, ->
+        @query ->
+          @term {tag: "something"}
+
+    expect(json).toEqual({query: {
+      has_child: {
+        type: "blog_tag",
+        query: {
+          term: {tag: "something"}
+        }
+      }
+    }})
+
+  it 'has_parent', ->
+    json = @subject.query ->
+      @has_parent {parent_type: "blog_tag"}, ->
+        @query ->
+          @term {tag: "something"}
+
+    expect(json).toEqual({query: {
+      has_parent: {
+        parent_type: "blog_tag",
+        query: {
+          term: {tag: "something"}
+        }
+      }
+    }})
