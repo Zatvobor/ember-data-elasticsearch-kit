@@ -360,4 +360,19 @@ describe 'QueryDSL', ->
       }
     }})
 
+  it 'constant_score', ->
+    json = @subject.query ->
+      @constant_score {boost: 1.2}, ->
+        @query ->
+          @term {user: "k"}
+
+    expect(json).toEqual({query: {
+      constant_score: {
+        boost: 1.2,
+        query: {
+          term: {user: "k"}
+        }
+      }
+    }})
+
 

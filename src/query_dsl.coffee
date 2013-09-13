@@ -210,6 +210,12 @@ class @QueryDSL
   params: (options) ->
     @_add('params', options)
 
+  ###
+    http://www.elasticsearch.org/guide/reference/query-dsl/constant-score-query/
+  ###
+
+  constant_score: (options, fun) ->
+    @_addWithFunction('constant_score', options, fun)
 
   ###
     http://www.elasticsearch.org/guide/reference/query-dsl/custom-boost-factor-query/

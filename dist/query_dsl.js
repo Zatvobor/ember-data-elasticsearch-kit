@@ -269,6 +269,15 @@
     };
 
     /*
+      http://www.elasticsearch.org/guide/reference/query-dsl/constant-score-query/
+    */
+
+
+    QueryDSL.prototype.constant_score = function(options, fun) {
+      return this._addWithFunction('constant_score', options, fun);
+    };
+
+    /*
       http://www.elasticsearch.org/guide/reference/query-dsl/custom-boost-factor-query/
     */
 

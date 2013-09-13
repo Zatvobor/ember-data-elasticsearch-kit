@@ -661,7 +661,7 @@
         }
       });
     });
-    return it('custom_boost_factor', function() {
+    it('custom_boost_factor', function() {
       var json;
       json = this.subject.query(function() {
         return this.custom_boost_factor({
@@ -678,6 +678,32 @@
         query: {
           custom_boost_factor: {
             boost_factor: 5.2,
+            query: {
+              term: {
+                user: "k"
+              }
+            }
+          }
+        }
+      });
+    });
+    return it('constant_score', function() {
+      var json;
+      json = this.subject.query(function() {
+        return this.constant_score({
+          boost: 1.2
+        }, function() {
+          return this.query(function() {
+            return this.term({
+              user: "k"
+            });
+          });
+        });
+      });
+      return expect(json).toEqual({
+        query: {
+          constant_score: {
+            boost: 1.2,
             query: {
               term: {
                 user: "k"
