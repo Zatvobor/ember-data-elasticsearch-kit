@@ -224,6 +224,16 @@ class @QueryDSL
   custom_boost_factor: (options, fun) ->
     @_addWithFunction('custom_boost_factor', options, fun)
 
+  ###
+    http://www.elasticsearch.org/guide/reference/query-dsl/dis-max-query/
+  ###
+
+  dis_max: (options, fun) ->
+    @_addWithFunction('dis_max', options, fun)
+
+  queries: (options, fun) ->
+    @_addWithFunction('queries', options, fun, [])
+
   #private methods
 
   _extractFun: (options, fun, optionsType={}) ->

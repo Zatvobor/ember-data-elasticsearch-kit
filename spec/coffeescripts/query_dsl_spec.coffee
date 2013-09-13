@@ -375,4 +375,22 @@ describe 'QueryDSL', ->
       }
     }})
 
+  it 'dis_max', ->
+    json = @subject.query ->
+      @dis_max {tie_breaker: 0.7, boost: 1.2}, ->
+        @queries ->
+          @term {age: 34}
+          @term {age: 35}
 
+    expect(json).toEqual({query:{
+      dis_max: {
+        tie_breaker: 0.7,
+        boost: 1.2,
+        queries: [{
+          term: { age: 34 }
+        },
+        {
+          term: { age: 35 }
+        }]
+      }
+    }})

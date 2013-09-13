@@ -286,6 +286,19 @@
       return this._addWithFunction('custom_boost_factor', options, fun);
     };
 
+    /*
+      http://www.elasticsearch.org/guide/reference/query-dsl/dis-max-query/
+    */
+
+
+    QueryDSL.prototype.dis_max = function(options, fun) {
+      return this._addWithFunction('dis_max', options, fun);
+    };
+
+    QueryDSL.prototype.queries = function(options, fun) {
+      return this._addWithFunction('queries', options, fun, []);
+    };
+
     QueryDSL.prototype._extractFun = function(options, fun, optionsType) {
       var _options;
       if (optionsType == null) {

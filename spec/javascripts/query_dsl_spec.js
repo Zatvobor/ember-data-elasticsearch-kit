@@ -687,7 +687,7 @@
         }
       });
     });
-    return it('constant_score', function() {
+    it('constant_score', function() {
       var json;
       json = this.subject.query(function() {
         return this.constant_score({
@@ -709,6 +709,43 @@
                 user: "k"
               }
             }
+          }
+        }
+      });
+    });
+    return it('dis_max', function() {
+      var json;
+      json = this.subject.query(function() {
+        return this.dis_max({
+          tie_breaker: 0.7,
+          boost: 1.2
+        }, function() {
+          return this.queries(function() {
+            this.term({
+              age: 34
+            });
+            return this.term({
+              age: 35
+            });
+          });
+        });
+      });
+      return expect(json).toEqual({
+        query: {
+          dis_max: {
+            tie_breaker: 0.7,
+            boost: 1.2,
+            queries: [
+              {
+                term: {
+                  age: 34
+                }
+              }, {
+                term: {
+                  age: 35
+                }
+              }
+            ]
           }
         }
       });
