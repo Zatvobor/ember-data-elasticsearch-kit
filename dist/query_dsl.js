@@ -238,6 +238,23 @@
       return this._addWithFunction('should', options, fun, []);
     };
 
+    /*
+      http://www.elasticsearch.org/guide/reference/query-dsl/boosting-query/
+    */
+
+
+    QueryDSL.prototype.boosting = function(options, fun) {
+      return this._addWithFunction('boosting', options, fun);
+    };
+
+    QueryDSL.prototype.positive = function(options, fun) {
+      return this._addWithFunction('positive', options, fun);
+    };
+
+    QueryDSL.prototype.negative = function(options, fun) {
+      return this._addWithFunction('negative', options, fun);
+    };
+
     QueryDSL.prototype._extractFun = function(options, fun, optionsType) {
       var _options;
       if (optionsType == null) {

@@ -288,3 +288,27 @@ describe 'QueryDSL', ->
         must_not: [{term: {user: "Dart"}}]
       }
     }})
+
+  it 'boosting', ->
+    json = @subject.query ->
+      @boosting {negative_boost: 0.2}, ->
+        @positive ->
+          @term {field1: "value1"}
+        @negative ->
+          @term {field2: "value2"}
+
+    expect(json).toEqual({query: {
+      boosting: {
+        negative_boost: 0.2,
+        positive: {
+          term: {
+            field1: "value1"
+          }
+        },
+        negative: {
+          term: {
+            field2: "value2"
+          }
+        }
+      }
+    }})

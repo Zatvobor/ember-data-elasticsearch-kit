@@ -502,7 +502,7 @@
         }
       });
     });
-    return it('bool query with all matchers', function() {
+    it('bool query with all matchers', function() {
       var json;
       json = this.subject.query(function() {
         return this.bool(function() {
@@ -561,6 +561,42 @@
                 }
               }
             ]
+          }
+        }
+      });
+    });
+    return it('boosting', function() {
+      var json;
+      json = this.subject.query(function() {
+        return this.boosting({
+          negative_boost: 0.2
+        }, function() {
+          this.positive(function() {
+            return this.term({
+              field1: "value1"
+            });
+          });
+          return this.negative(function() {
+            return this.term({
+              field2: "value2"
+            });
+          });
+        });
+      });
+      return expect(json).toEqual({
+        query: {
+          boosting: {
+            negative_boost: 0.2,
+            positive: {
+              term: {
+                field1: "value1"
+              }
+            },
+            negative: {
+              term: {
+                field2: "value2"
+              }
+            }
           }
         }
       });

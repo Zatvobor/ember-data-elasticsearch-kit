@@ -186,6 +186,19 @@ class @QueryDSL
     @_addWithFunction('should', options, fun, [])
 
 
+  ###
+    http://www.elasticsearch.org/guide/reference/query-dsl/boosting-query/
+  ###
+
+  boosting: (options, fun) ->
+    @_addWithFunction('boosting', options, fun)
+
+  positive: (options, fun) ->
+    @_addWithFunction('positive', options, fun)
+
+  negative: (options, fun) ->
+    @_addWithFunction('negative', options, fun)
+
 
   #private methods
 
