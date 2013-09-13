@@ -400,6 +400,10 @@
       return this._addWithFunction('top_children', options, fun);
     };
 
+    QueryDSL.prototype.nested = function(options, fun) {
+      return this._addWithFunction('nested', options, fun);
+    };
+
     QueryDSL.prototype._extractFun = function(options, fun, optionsType) {
       var _options;
       if (optionsType == null) {

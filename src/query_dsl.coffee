@@ -313,6 +313,9 @@ class @QueryDSL
   top_children: (options, fun) ->
     @_addWithFunction('top_children', options, fun)
 
+  nested: (options, fun) ->
+    @_addWithFunction('nested', options, fun)
+
 
 
 

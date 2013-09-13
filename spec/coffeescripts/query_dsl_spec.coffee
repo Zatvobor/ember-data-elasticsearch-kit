@@ -551,3 +551,28 @@ describe 'QueryDSL', ->
       }
     }})
 
+  it 'nested', ->
+    json = @subject.query ->
+      @nested {path: "obj1", score_mode: "avg"}, ->
+        @query ->
+          @bool ->
+            @must ->
+              @match {"obj1.name": "blue"}
+              @range {"obj1.count": {gt: 5}}
+
+    expect(json).toEqual({query:{
+      nested: {
+        path: "obj1",
+        score_mode: "avg",
+        query: {
+          bool: {
+            must: [{
+              match: {"obj1.name": "blue"}
+            },
+            {
+              range: {"obj1.count": {gt: 5}}
+            }]
+          }
+        }
+      }
+    }})

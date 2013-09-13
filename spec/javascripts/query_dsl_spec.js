@@ -1027,7 +1027,7 @@
         }
       });
     });
-    return it('top_children', function() {
+    it('top_children', function() {
       var json;
       json = this.subject.query(function() {
         return this.top_children({
@@ -1053,6 +1053,55 @@
             query: {
               term: {
                 tag: "something"
+              }
+            }
+          }
+        }
+      });
+    });
+    return it('nested', function() {
+      var json;
+      json = this.subject.query(function() {
+        return this.nested({
+          path: "obj1",
+          score_mode: "avg"
+        }, function() {
+          return this.query(function() {
+            return this.bool(function() {
+              return this.must(function() {
+                this.match({
+                  "obj1.name": "blue"
+                });
+                return this.range({
+                  "obj1.count": {
+                    gt: 5
+                  }
+                });
+              });
+            });
+          });
+        });
+      });
+      return expect(json).toEqual({
+        query: {
+          nested: {
+            path: "obj1",
+            score_mode: "avg",
+            query: {
+              bool: {
+                must: [
+                  {
+                    match: {
+                      "obj1.name": "blue"
+                    }
+                  }, {
+                    range: {
+                      "obj1.count": {
+                        gt: 5
+                      }
+                    }
+                  }
+                ]
               }
             }
           }
