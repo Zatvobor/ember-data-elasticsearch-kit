@@ -565,7 +565,7 @@
         }
       });
     });
-    return it('boosting', function() {
+    it('boosting', function() {
       var json;
       json = this.subject.query(function() {
         return this.boosting({
@@ -595,6 +595,92 @@
             negative: {
               term: {
                 field2: "value2"
+              }
+            }
+          }
+        }
+      });
+    });
+    it('custom_score query', function() {
+      var json;
+      json = this.subject.query(function() {
+        return this.custom_score({
+          script: "_score * doc['my_numeric_field'].value"
+        }, function() {
+          return this.query(function() {
+            return this.term({
+              user: "k"
+            });
+          });
+        });
+      });
+      return expect(json).toEqual({
+        query: {
+          custom_score: {
+            script: "_score * doc['my_numeric_field'].value",
+            query: {
+              term: {
+                user: "k"
+              }
+            }
+          }
+        }
+      });
+    });
+    it('custom_score query with params', function() {
+      var json;
+      json = this.subject.query(function() {
+        return this.custom_score({
+          script: "_score * doc['my_numeric_field'].value / pow(param1, param2)"
+        }, function() {
+          this.query(function() {
+            return this.term({
+              user: "k"
+            });
+          });
+          return this.params({
+            param1: 2,
+            param2: 3.1
+          });
+        });
+      });
+      return expect(json).toEqual({
+        query: {
+          custom_score: {
+            script: "_score * doc['my_numeric_field'].value / pow(param1, param2)",
+            query: {
+              term: {
+                user: "k"
+              }
+            },
+            params: {
+              param1: 2,
+              param2: 3.1
+            }
+          }
+        }
+      });
+    });
+    return it('custom_boost_factor', function() {
+      var json;
+      json = this.subject.query(function() {
+        return this.custom_boost_factor({
+          boost_factor: 5.2
+        }, function() {
+          return this.query(function() {
+            return this.term({
+              user: "k"
+            });
+          });
+        });
+      });
+      return expect(json).toEqual({
+        query: {
+          custom_boost_factor: {
+            boost_factor: 5.2,
+            query: {
+              term: {
+                user: "k"
               }
             }
           }

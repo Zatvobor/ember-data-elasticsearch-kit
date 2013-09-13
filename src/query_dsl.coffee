@@ -200,6 +200,24 @@ class @QueryDSL
     @_addWithFunction('negative', options, fun)
 
 
+  ###
+    http://www.elasticsearch.org/guide/reference/query-dsl/custom-score-query/
+  ###
+
+  custom_score: (options, fun) ->
+    @_addWithFunction('custom_score', options, fun)
+
+  params: (options) ->
+    @_add('params', options)
+
+
+  ###
+    http://www.elasticsearch.org/guide/reference/query-dsl/custom-boost-factor-query/
+  ###
+
+  custom_boost_factor: (options, fun) ->
+    @_addWithFunction('custom_boost_factor', options, fun)
+
   #private methods
 
   _extractFun: (options, fun, optionsType={}) ->

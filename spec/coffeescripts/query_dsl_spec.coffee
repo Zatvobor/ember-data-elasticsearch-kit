@@ -312,3 +312,52 @@ describe 'QueryDSL', ->
         }
       }
     }})
+
+  it 'custom_score query', ->
+    json = @subject.query ->
+      @custom_score {script: "_score * doc['my_numeric_field'].value"}, ->
+        @query ->
+          @term {user: "k"}
+
+    expect(json).toEqual({query:{
+      custom_score: {
+        script: "_score * doc['my_numeric_field'].value",
+        query: {
+          term: {user: "k"}
+        }
+      }
+    }})
+
+  it 'custom_score query with params', ->
+    json = @subject.query ->
+      @custom_score {script: "_score * doc['my_numeric_field'].value / pow(param1, param2)"}, ->
+        @query ->
+          @term {user: "k"}
+        @params {param1: 2, param2: 3.1}
+
+    expect(json).toEqual({query:{
+      custom_score: {
+        script: "_score * doc['my_numeric_field'].value / pow(param1, param2)",
+        query: {
+          term: {user: "k"}
+        },
+        params: {param1: 2, param2: 3.1}
+      }
+    }})
+
+  it 'custom_boost_factor', ->
+    json = @subject.query ->
+      @custom_boost_factor {boost_factor: 5.2}, ->
+        @query ->
+          @term {user: "k"}
+
+    expect(json).toEqual({query: {
+      custom_boost_factor:{
+        boost_factor: 5.2,
+        query: {
+          term: {user: "k"}
+        }
+      }
+    }})
+
+

@@ -255,6 +255,28 @@
       return this._addWithFunction('negative', options, fun);
     };
 
+    /*
+      http://www.elasticsearch.org/guide/reference/query-dsl/custom-score-query/
+    */
+
+
+    QueryDSL.prototype.custom_score = function(options, fun) {
+      return this._addWithFunction('custom_score', options, fun);
+    };
+
+    QueryDSL.prototype.params = function(options) {
+      return this._add('params', options);
+    };
+
+    /*
+      http://www.elasticsearch.org/guide/reference/query-dsl/custom-boost-factor-query/
+    */
+
+
+    QueryDSL.prototype.custom_boost_factor = function(options, fun) {
+      return this._addWithFunction('custom_boost_factor', options, fun);
+    };
+
     QueryDSL.prototype._extractFun = function(options, fun, optionsType) {
       var _options;
       if (optionsType == null) {
