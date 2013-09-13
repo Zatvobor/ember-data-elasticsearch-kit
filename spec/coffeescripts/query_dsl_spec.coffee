@@ -445,3 +445,90 @@ describe 'QueryDSL', ->
         }
       }
     }})
+
+  it 'span_first', ->
+    json = @subject.query ->
+      @span_first {end: 3}, ->
+        @match ->
+          @span_term {user: "kimchy"}
+
+    expect(json).toEqual({query:{
+      span_first: {
+        end: 3,
+        match: {
+          span_term: {user: "kimchy"}
+        }
+      }
+    }})
+
+  it 'span_multi', ->
+    json = @subject.query ->
+      @span_multi ->
+        @match ->
+          @prefix {user: {value: "ki"}}
+
+    expect(json).toEqual({query: {
+      span_multi: {
+        match: {prefix: {user: {value: "ki"}}}
+      }
+    }})
+
+  it 'span_near', ->
+    json = @subject.query ->
+      @span_near {slop: 12, in_order: false, collect_payloads: false}, ->
+        @clauses ->
+          @span_term {field: "value"}
+          @span_term {field: "value1"}
+          @span_term {field: "value2"}
+
+    expect(json).toEqual({query: {
+      span_near: {
+        slop: 12, in_order: false, collect_payloads: false,
+        clauses: [{ span_term: { field: "value" } },
+        { span_term: { field: "value1" } },
+        { span_term: { field: "value2" } }]
+      }
+    }})
+
+  it 'span_not', ->
+    json = @subject.query ->
+      @span_not ->
+        @include ->
+          @span_term {field1: "value1"}
+        @exclude ->
+          @span_term {field2: "value2"}
+
+    expect(json).toEqual({query: {
+      span_not: {
+        include: {
+          span_term: { field1: "value1" }
+        },
+        exclude: {
+          span_term: { field2: "value2" }
+        },
+      }
+    }})
+
+  it 'span_or', ->
+    json = @subject.query ->
+      @span_or ->
+        @clauses ->
+          @span_term {field: "value"}
+          @span_term {field: "value1"}
+          @span_term {field: "value2"}
+
+    expect(json).toEqual({query: {
+      span_or: {
+        clauses: [{ span_term: { field: "value" } },
+        { span_term: { field: "value1" } },
+        { span_term: { field: "value2" } }]
+      }
+    }})
+
+  it 'span_term', ->
+    json = @subject.query ->
+      @span_term { field: "value1" }
+
+    expect(json).toEqual({query:{
+      span_term: { field: "value1" }
+    }})

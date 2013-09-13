@@ -815,7 +815,7 @@
         }
       });
     });
-    return it('has_parent', function() {
+    it('has_parent', function() {
       var json;
       json = this.subject.query(function() {
         return this.has_parent({
@@ -837,6 +837,192 @@
                 tag: "something"
               }
             }
+          }
+        }
+      });
+    });
+    it('span_first', function() {
+      var json;
+      json = this.subject.query(function() {
+        return this.span_first({
+          end: 3
+        }, function() {
+          return this.match(function() {
+            return this.span_term({
+              user: "kimchy"
+            });
+          });
+        });
+      });
+      return expect(json).toEqual({
+        query: {
+          span_first: {
+            end: 3,
+            match: {
+              span_term: {
+                user: "kimchy"
+              }
+            }
+          }
+        }
+      });
+    });
+    it('span_multi', function() {
+      var json;
+      json = this.subject.query(function() {
+        return this.span_multi(function() {
+          return this.match(function() {
+            return this.prefix({
+              user: {
+                value: "ki"
+              }
+            });
+          });
+        });
+      });
+      return expect(json).toEqual({
+        query: {
+          span_multi: {
+            match: {
+              prefix: {
+                user: {
+                  value: "ki"
+                }
+              }
+            }
+          }
+        }
+      });
+    });
+    it('span_near', function() {
+      var json;
+      json = this.subject.query(function() {
+        return this.span_near({
+          slop: 12,
+          in_order: false,
+          collect_payloads: false
+        }, function() {
+          return this.clauses(function() {
+            this.span_term({
+              field: "value"
+            });
+            this.span_term({
+              field: "value1"
+            });
+            return this.span_term({
+              field: "value2"
+            });
+          });
+        });
+      });
+      return expect(json).toEqual({
+        query: {
+          span_near: {
+            slop: 12,
+            in_order: false,
+            collect_payloads: false,
+            clauses: [
+              {
+                span_term: {
+                  field: "value"
+                }
+              }, {
+                span_term: {
+                  field: "value1"
+                }
+              }, {
+                span_term: {
+                  field: "value2"
+                }
+              }
+            ]
+          }
+        }
+      });
+    });
+    it('span_not', function() {
+      var json;
+      json = this.subject.query(function() {
+        return this.span_not(function() {
+          this.include(function() {
+            return this.span_term({
+              field1: "value1"
+            });
+          });
+          return this.exclude(function() {
+            return this.span_term({
+              field2: "value2"
+            });
+          });
+        });
+      });
+      return expect(json).toEqual({
+        query: {
+          span_not: {
+            include: {
+              span_term: {
+                field1: "value1"
+              }
+            },
+            exclude: {
+              span_term: {
+                field2: "value2"
+              }
+            }
+          }
+        }
+      });
+    });
+    it('span_or', function() {
+      var json;
+      json = this.subject.query(function() {
+        return this.span_or(function() {
+          return this.clauses(function() {
+            this.span_term({
+              field: "value"
+            });
+            this.span_term({
+              field: "value1"
+            });
+            return this.span_term({
+              field: "value2"
+            });
+          });
+        });
+      });
+      return expect(json).toEqual({
+        query: {
+          span_or: {
+            clauses: [
+              {
+                span_term: {
+                  field: "value"
+                }
+              }, {
+                span_term: {
+                  field: "value1"
+                }
+              }, {
+                span_term: {
+                  field: "value2"
+                }
+              }
+            ]
+          }
+        }
+      });
+    });
+    return it('span_term', function() {
+      var json;
+      json = this.subject.query(function() {
+        return this.span_term({
+          field: "value1"
+        });
+      });
+      return expect(json).toEqual({
+        query: {
+          span_term: {
+            field: "value1"
           }
         }
       });

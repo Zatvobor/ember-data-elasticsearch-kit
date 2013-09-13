@@ -21,8 +21,8 @@ class @QueryDSL
     http://www.elasticsearch.org/guide/reference/query-dsl/match-query/
   ###
 
-  match: (options) ->
-    @_add('match', options)
+  match: (options, fun) ->
+    @_add('match', options, fun)
 
   match_phrase: (options) ->
     @_add('match_phrase', options)
@@ -259,6 +259,59 @@ class @QueryDSL
   has_parent: (options, fun) ->
     @_addWithFunction('has_parent', options, fun)
 
+  ###
+    http://www.elasticsearch.org/guide/reference/query-dsl/span-first-query/
+  ###
+
+  span_first: (options, fun) ->
+    @_addWithFunction('span_first', options, fun)
+
+  ###
+    http://www.elasticsearch.org/guide/reference/query-dsl/span-multi-term-query/
+  ###
+
+  span_multi: (options, fun) ->
+    @_addWithFunction('span_multi', options, fun)
+
+  span_term: (options, fun) ->
+    @_add('span_term', options, fun)
+
+  ###
+    http://www.elasticsearch.org/guide/reference/query-dsl/span-near-query/
+  ###
+
+  span_near: (options, fun) ->
+    @_addWithFunction('span_near', options, fun)
+
+  clauses: (options, fun) ->
+    @_addWithFunction('clauses', options, fun, [])
+
+  ###
+    http://www.elasticsearch.org/guide/reference/query-dsl/span-not-query/
+  ###
+
+  span_not: (options, fun) ->
+    @_addWithFunction('span_not', options, fun)
+
+  include: (options, fun) ->
+    @_addWithFunction('include', options, fun)
+
+  exclude: (options, fun) ->
+    @_addWithFunction('exclude', options, fun)
+
+  ###
+    http://www.elasticsearch.org/guide/reference/query-dsl/span-or-query/
+  ###
+
+  span_or: (options, fun) ->
+    @_addWithFunction('span_or', options, fun)
+
+
+
+
+
+
+
   #private methods
 
   _extractFun: (options, fun, optionsType={}) ->
@@ -269,14 +322,17 @@ class @QueryDSL
       _options = options
     [_options, fun]
 
-  _add: (type, options) ->
-    params = {}
-    params[type] = options
-    if @_query["push"]
-      @_query.push(params)
+  _add: (type, options, fun) ->
+    if fun || typeof options == 'function'
+      @_addWithFunction(type, options, fun)
     else
-      @_query[type] = options
-    params
+      params = {}
+      params[type] = options
+      if @_query["push"]
+        @_query.push(params)
+      else
+        @_query[type] = options
+      params
 
   _addWithFunction: (type, options, fun, optionsType={}) ->
     [_options, fun] = @_extractFun(options, fun, optionsType)

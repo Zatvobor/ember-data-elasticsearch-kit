@@ -27,8 +27,8 @@
     */
 
 
-    QueryDSL.prototype.match = function(options) {
-      return this._add('match', options);
+    QueryDSL.prototype.match = function(options, fun) {
+      return this._add('match', options, fun);
     };
 
     QueryDSL.prototype.match_phrase = function(options) {
@@ -330,6 +330,67 @@
       return this._addWithFunction('has_parent', options, fun);
     };
 
+    /*
+      http://www.elasticsearch.org/guide/reference/query-dsl/span-first-query/
+    */
+
+
+    QueryDSL.prototype.span_first = function(options, fun) {
+      return this._addWithFunction('span_first', options, fun);
+    };
+
+    /*
+      http://www.elasticsearch.org/guide/reference/query-dsl/span-multi-term-query/
+    */
+
+
+    QueryDSL.prototype.span_multi = function(options, fun) {
+      return this._addWithFunction('span_multi', options, fun);
+    };
+
+    QueryDSL.prototype.span_term = function(options, fun) {
+      return this._add('span_term', options, fun);
+    };
+
+    /*
+      http://www.elasticsearch.org/guide/reference/query-dsl/span-near-query/
+    */
+
+
+    QueryDSL.prototype.span_near = function(options, fun) {
+      return this._addWithFunction('span_near', options, fun);
+    };
+
+    QueryDSL.prototype.clauses = function(options, fun) {
+      return this._addWithFunction('clauses', options, fun, []);
+    };
+
+    /*
+      http://www.elasticsearch.org/guide/reference/query-dsl/span-not-query/
+    */
+
+
+    QueryDSL.prototype.span_not = function(options, fun) {
+      return this._addWithFunction('span_not', options, fun);
+    };
+
+    QueryDSL.prototype.include = function(options, fun) {
+      return this._addWithFunction('include', options, fun);
+    };
+
+    QueryDSL.prototype.exclude = function(options, fun) {
+      return this._addWithFunction('exclude', options, fun);
+    };
+
+    /*
+      http://www.elasticsearch.org/guide/reference/query-dsl/span-or-query/
+    */
+
+
+    QueryDSL.prototype.span_or = function(options, fun) {
+      return this._addWithFunction('span_or', options, fun);
+    };
+
     QueryDSL.prototype._extractFun = function(options, fun, optionsType) {
       var _options;
       if (optionsType == null) {
@@ -344,16 +405,20 @@
       return [_options, fun];
     };
 
-    QueryDSL.prototype._add = function(type, options) {
+    QueryDSL.prototype._add = function(type, options, fun) {
       var params;
-      params = {};
-      params[type] = options;
-      if (this._query["push"]) {
-        this._query.push(params);
+      if (fun || typeof options === 'function') {
+        return this._addWithFunction(type, options, fun);
       } else {
-        this._query[type] = options;
+        params = {};
+        params[type] = options;
+        if (this._query["push"]) {
+          this._query.push(params);
+        } else {
+          this._query[type] = options;
+        }
+        return params;
       }
-      return params;
     };
 
     QueryDSL.prototype._addWithFunction = function(type, options, fun, optionsType) {
