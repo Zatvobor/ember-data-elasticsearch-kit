@@ -1,0 +1,5 @@
+.idea/
+vendor/bundle
+.bundle
+.rvmrc
+bin/
