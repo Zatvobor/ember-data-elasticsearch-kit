@@ -4,6 +4,7 @@ src_files:
   - vendor/assets/javascripts/ember.js
   - vendor/assets/javascripts/**/*.js
   - dist/query_dsl.js
+  - dist/mapping_dsl.js
 
 spec_files:
   - '**/*[sS]pec.js'
