@@ -6,6 +6,7 @@ src_files:
   - dist/query_dsl.js
   - dist/mapping_dsl.js
   - dist/bulk_dsl.js
+  - dist/elasticsearch-adapter.js
 
 spec_files:
   - '**/*[sS]pec.js'
