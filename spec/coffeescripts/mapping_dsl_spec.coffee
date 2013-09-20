@@ -106,3 +106,19 @@ describe 'MappingDSL', ->
         }
       }
     })
+
+  it 'delete index', ->
+    responce = @subject.delete("http://localhost:9200/test_index"
+    expect(responce).toEqual({
+      ok : true, acknowledged : true
+    })
+
+  it "create mapping", ->
+    mapping = @subject.mapping ->
+      @mapping "testUser", ->
+        @mapping "firstName", type: "string"
+        @mapping "lastName", type: "string"
+    responce = @subject.create("http://localhost:9200/test_index", mapping)
+    expect(responce).toEqual({
+      ok : true, acknowledged : true
+    })

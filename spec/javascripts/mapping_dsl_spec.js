@@ -117,7 +117,7 @@
         }
       });
     });
-    return it('create mapping with settings', function() {
+    it('create mapping with settings', function() {
       var settings;
       settings = this.subject.mapping({
         analysis: {
@@ -157,6 +157,27 @@
             }
           }
         }
+      });
+    });
+    it('delete index', function() {
+      return this.subject["delete"]("http://localhost:9200/test_index");
+    });
+    return it("create mapping", function() {
+      var mapping, responce;
+      mapping = this.subject.mapping(function() {
+        return this.mapping("testUser", function() {
+          this.mapping("firstName", {
+            type: "string"
+          });
+          return this.mapping("lastName", {
+            type: "string"
+          });
+        });
+      });
+      responce = this.subject.create("http://localhost:9200/test_index", mapping);
+      return expect(responce).toEqual({
+        ok: true,
+        acknowledged: true
       });
     });
   });

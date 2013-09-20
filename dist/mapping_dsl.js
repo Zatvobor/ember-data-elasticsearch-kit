@@ -13,6 +13,38 @@
       return this._mappings;
     };
 
+    MappingDSL.create = function(url, json) {
+      var hash,
+        _this = this;
+      this.responce = void 0;
+      hash = {};
+      hash.url = url;
+      hash.type = "PUT";
+      hash.dataType = 'json';
+      hash.async = false;
+      hash.contentType = 'application/json; charset=utf-8';
+      hash.data = JSON.stringify(json);
+      hash.success = function(data) {
+        return _this.responce = data;
+      };
+      Ember.$.ajax(hash);
+      return this.responce;
+    };
+
+    MappingDSL["delete"] = function(url) {
+      var hash,
+        _this = this;
+      this.responce = void 0;
+      hash = {};
+      hash.url = url;
+      hash.type = "DELETE";
+      hash.success = function(data) {
+        return _this.responce = data;
+      };
+      Ember.$.ajax(hash);
+      return this.responce;
+    };
+
     function MappingDSL(_mappings) {
       this._mappings = _mappings;
     }

@@ -8,6 +8,29 @@ class @MappingDSL
     fun.call(new MappingDSL(@_mappings.mappings))
     @_mappings
 
+  @create: (url, json) ->
+    @responce = undefined
+
+    hash = {}
+    hash.url = url
+    hash.type = "PUT"
+    hash.dataType = 'json'
+    hash.async = false
+    hash.contentType = 'application/json; charset=utf-8'
+    hash.data = JSON.stringify(json)
+    hash.success = (data) => @responce = data
+    Ember.$.ajax(hash)
+    @responce
+
+  @delete: (url) ->
+    @responce = undefined
+    hash = {}
+    hash.url = url
+    hash.type = "DELETE"
+    hash.success = (data) => @responce = data
+    Ember.$.ajax(hash)
+    @responce
+
   constructor: (@_mappings) ->
 
   mapping: (type, options, fun) ->
@@ -23,3 +46,4 @@ class @MappingDSL
       fun.call(new MappingDSL(mappings.properties))
     else
       @_mappings[type] = (options || mappings)
+
