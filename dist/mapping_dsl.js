@@ -38,6 +38,7 @@
       hash = {};
       hash.url = url;
       hash.type = "DELETE";
+      hash.async = false;
       hash.success = function(data) {
         return _this.responce = data;
       };

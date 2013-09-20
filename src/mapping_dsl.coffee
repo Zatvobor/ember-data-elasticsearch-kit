@@ -27,6 +27,7 @@ class @MappingDSL
     hash = {}
     hash.url = url
     hash.type = "DELETE"
+    hash.async = false
     hash.success = (data) => @responce = data
     Ember.$.ajax(hash)
     @responce

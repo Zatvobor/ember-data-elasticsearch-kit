@@ -108,10 +108,8 @@ describe 'MappingDSL', ->
     })
 
   it 'delete index', ->
-    responce = @subject.delete("http://localhost:9200/test_index"
-    expect(responce).toEqual({
-      ok : true, acknowledged : true
-    })
+    responce = @subject.delete("http://localhost:9200/test_index")
+    expect(responce).toEqual({ok: true, acknowledged: true})
 
   it "create mapping", ->
     mapping = @subject.mapping ->
@@ -119,6 +117,4 @@ describe 'MappingDSL', ->
         @mapping "firstName", type: "string"
         @mapping "lastName", type: "string"
     responce = @subject.create("http://localhost:9200/test_index", mapping)
-    expect(responce).toEqual({
-      ok : true, acknowledged : true
-    })
+    expect(responce).toEqual({ok: true, acknowledged: true})

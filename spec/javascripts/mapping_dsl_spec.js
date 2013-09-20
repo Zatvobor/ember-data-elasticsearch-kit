@@ -160,7 +160,12 @@
       });
     });
     it('delete index', function() {
-      return this.subject["delete"]("http://localhost:9200/test_index");
+      var responce;
+      responce = this.subject["delete"]("http://localhost:9200/test_index");
+      return expect(responce).toEqual({
+        ok: true,
+        acknowledged: true
+      });
     });
     return it("create mapping", function() {
       var mapping, responce;
