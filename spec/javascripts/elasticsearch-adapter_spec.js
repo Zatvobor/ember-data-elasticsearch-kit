@@ -3,7 +3,7 @@
     beforeEach(function() {
       return this.subject = new TestEnv();
     });
-    return describe("find", function() {
+    describe("find", function() {
       it("by id", function() {
         this.subject.loadData();
         return runs(function() {
@@ -58,6 +58,60 @@
           });
           return runs(function() {
             return expect(model.total).toEqual(3);
+          });
+        });
+      });
+    });
+    return describe('create, update, delete', function() {
+      it("create document", function() {
+        return runs(function() {
+          var model;
+          model = window.Fixture.store.createRecord('user', {
+            name: "my name"
+          });
+          model.save();
+          waitsFor(function() {
+            return model.get('id') !== void 0 && model.get('id') !== null;
+          });
+          return runs(function() {
+            expect(model.get('id')).toBeDefined();
+            return expect(model.get('name')).toEqual('my name');
+          });
+        });
+      });
+      it('update document', function() {
+        var model;
+        this.subject.loadData();
+        model = void 0;
+        return runs(function() {
+          window.Fixture.store.find('user', 2).then(function(_model) {
+            return model = _model;
+          });
+          waitsFor(function() {
+            return model !== void 0 && model.get('name') !== null && model.get('name') !== void 0;
+          });
+          return runs(function() {
+            model.set('name', "updated");
+            model.save();
+            return expect(model.get('name')).toEqual('updated');
+          });
+        });
+      });
+      return it('delete document', function() {
+        var model;
+        this.subject.loadData();
+        model = void 0;
+        return runs(function() {
+          window.Fixture.store.find('user', 2).then(function(_model) {
+            return model = _model;
+          });
+          waitsFor(function() {
+            return model !== void 0 && model.get('name') !== null && model.get('name') !== void 0;
+          });
+          return runs(function() {
+            model.deleteRecord();
+            model.save();
+            return expect(model.get('isDeleted')).toBe(true);
           });
         });
       });

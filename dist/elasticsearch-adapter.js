@@ -112,9 +112,39 @@
         data: query
       });
     },
-    createRecord: function(store, type, record) {},
-    updateRecord: function(store, type, record) {},
-    deleteRecord: function(store, type, record) {}
+    createRecord: function(store, type, record) {
+      var normalizeResponce, rawJson;
+      rawJson = store.serializerFor(type.typeKey).serialize(record);
+      normalizeResponce = function(data) {
+        var id, json;
+        json = {};
+        id = data._id || data.id;
+        json[type.typeKey] = $.extend({
+          id: id
+        }, rawJson);
+        return json;
+      };
+      return this.ajax('', 'POST', normalizeResponce, {
+        data: rawJson
+      });
+    },
+    updateRecord: function(store, type, record) {
+      var normalizeResponce, rawJson;
+      rawJson = store.serializerFor(type.typeKey).serialize(record);
+      normalizeResponce = function(data) {
+        var json;
+        rawJson.id = data._id;
+        json = {};
+        json[type.typeKey] = rawJson;
+        return json;
+      };
+      return this.ajax(record.get('id'), 'PUT', normalizeResponce, {
+        data: rawJson
+      });
+    },
+    deleteRecord: function(store, type, record) {
+      return this.ajax(record.get('id'), 'DELETE', (function() {}));
+    }
   });
 
 }).call(this);

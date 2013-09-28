@@ -90,7 +90,28 @@ DS.ElasticSearchAdapter = DS.Adapter.extend
     })
 
   createRecord: (store, type, record) ->
+    rawJson = store.serializerFor(type.typeKey).serialize(record)
+    normalizeResponce = (data) ->
+      json = {}
+      id = data._id || data.id
+      json[type.typeKey] = $.extend({id: id}, rawJson)
+      json
+
+    @ajax('', 'POST', normalizeResponce, {
+      data: rawJson
+    })
 
   updateRecord: (store, type, record) ->
+    rawJson = store.serializerFor(type.typeKey).serialize(record)
+    normalizeResponce = (data) ->
+      rawJson.id = data._id
+      json = {}
+      json[type.typeKey] = rawJson
+      json
+
+    @ajax(record.get('id'), 'PUT', normalizeResponce, {
+      data: rawJson
+    })
 
   deleteRecord: (store, type, record) ->
+    @ajax(record.get('id'), 'DELETE', (->))
