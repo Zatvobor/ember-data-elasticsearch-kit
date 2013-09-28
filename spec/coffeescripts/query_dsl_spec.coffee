@@ -577,36 +577,36 @@ describe 'QueryDSL', ->
       }
     }})
 
-#  it 'custom_filters_score', ->
-#    json = @subject.query ->
-#      @custom_filters_score {score_mode: "first"}, ->
-#        @query ->
-#          @match_all()
-#
-#        @filters ->
-#          @filter ->
+  it 'custom_filters_score', ->
+    json = @subject.query ->
+      @custom_filters_score {score_mode: "first"}, ->
+        @query ->
+          @match_all()
+
+        @filters ->
+          @filter ->
 #            @range {age: {from: 0, to: 10}}
 #            @boost 3
 #
-#          @filter ->
+          @filter ->
 #            @range {age: {from: 0, to: 10}}
 #          @boost 3
 #
-#    expect(json).toEqual({query: {custom_filters_score: {
-#      "score_mode" : "first",
-#      query: {
-#        "match_all" : {}
-#      },
-#      filters: [{
-#        filter: { range: { age: {from: 0, to: 10} } },
-#        boost: "3"
-#      },
-#      {
-#        filter: { range: { age: {from: 10, to: 20} } },
-#        boost: "2"
-#      }
-#      ]
-#    }}})
+    expect(json).toEqual({query: {custom_filters_score: {
+      "score_mode" : "first",
+      query: {
+        "match_all" : {}
+      },
+      filters: [{
+        filter: { range: { age: {from: 0, to: 10} } },
+        boost: "3"
+      },
+      {
+        filter: { range: { age: {from: 10, to: 20} } },
+        boost: "2"
+      }
+      ]
+    }}})
 
   it 'indices', ->
     json = @subject.query ->

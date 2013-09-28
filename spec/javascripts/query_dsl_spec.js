@@ -1108,6 +1108,55 @@
         }
       });
     });
+    it('custom_filters_score', function() {
+      var json;
+      json = this.subject.query(function() {
+        return this.custom_filters_score({
+          score_mode: "first"
+        }, function() {
+          this.query(function() {
+            return this.match_all();
+          });
+          return this.filters(function() {
+            this.filter(function() {});
+            return this.filter(function() {});
+          });
+        });
+      });
+      return expect(json).toEqual({
+        query: {
+          custom_filters_score: {
+            "score_mode": "first",
+            query: {
+              "match_all": {}
+            },
+            filters: [
+              {
+                filter: {
+                  range: {
+                    age: {
+                      from: 0,
+                      to: 10
+                    }
+                  }
+                },
+                boost: "3"
+              }, {
+                filter: {
+                  range: {
+                    age: {
+                      from: 10,
+                      to: 20
+                    }
+                  }
+                },
+                boost: "2"
+              }
+            ]
+          }
+        }
+      });
+    });
     it('indices', function() {
       var json;
       json = this.subject.query(function() {
