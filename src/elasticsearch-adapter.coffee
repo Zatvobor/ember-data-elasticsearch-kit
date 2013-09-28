@@ -3,9 +3,11 @@ DS.ElasticSearchAdapter = DS.Adapter.extend
   buildURL: ->
     host = Ember.get(this, "host")
     namespace = Ember.get(this, "namespace")
+
     url = []
     url.push host  if host
     url.push namespace  if namespace
+    url.push Ember.get(this, "url")
     url = url.join("/")
     url = "/" + url  unless host
     url
@@ -51,7 +53,7 @@ DS.ElasticSearchAdapter = DS.Adapter.extend
       _modelJson = {}
       _modelJson[type.typeKey] = data['_source']
       _modelJson
-#    @ajax(id, 'GET', normalizeResponce)
+    @ajax(id, 'GET', normalizeResponce)
 
   findMany: (store, type, ids) ->
     data =
@@ -62,32 +64,33 @@ DS.ElasticSearchAdapter = DS.Adapter.extend
       json[Ember.String.pluralize(type.typeKey)] = data['docs'].getEach('_source')
       json
 
-    #url = [this.url, type.url, '_mget'].join('/');
-
-#    @ajax('_all_docs?include_docs=true', 'POST', normalizeResponce, {
-#      data: data
-#    })
+    @ajax('_mget', 'POST', normalizeResponce, {
+      data: data
+    })
 
   findQuery: (store, type, query, modelArray) ->
-#    url = [this.url, type.url, '_search'].join('/')
-
     normalizeResponce = (data) ->
       json = {}
       _type = Ember.String.pluralize(type.typeKey)
+
+      modelArray.set('total', data['hits'].total)
+
       json[_type] = data['hits']['hits'].getEach('_source')
       json[_type].forEach (item) =>
         if item._id && !item.id
           item.id = item._id
+
+      if query.fields && query.fields.length == 0
+        json[_type] =  data['hits']['hits'].getEach('_id')
+
       json
+
+    @ajax('_search', 'POST', normalizeResponce, {
+      data: query
+    })
 
   createRecord: (store, type, record) ->
 
   updateRecord: (store, type, record) ->
 
   deleteRecord: (store, type, record) ->
-
-
-#    @ajax('_design/%@/_view/%@'.fmt(designDoc, query.viewName), 'GET', normalizeResponce, {
-#      context: this
-#      data: query.options
-#    })

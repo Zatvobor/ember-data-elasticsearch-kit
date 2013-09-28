@@ -20,6 +20,14 @@ class @BulkDSL
     Ember.$.ajax(hash)
     @responce
 
+  @refresh: (url) ->
+    hash = {}
+    hash.url = "%@/_refresh".fmt(url)
+    hash.async = false
+    hash.type = 'POST'
+    hash.contentType = 'application/json; charset=utf-8'
+    Ember.$.ajax(hash)
+
   constructor: (@options, @documents) ->
     @meta = ["_type", "_index"]
     @_index = @options.index
@@ -43,7 +51,7 @@ class @BulkDSL
 
   _createHeader: (options) ->
     headers = {}
-    ["_type", "_index", "_version", "_routing", "_percolate", "_parent", "_timestamp", "_ttl"].forEach (type) =>
+    ["_type", "_index", "_version", "_routing", "_refresh", "_percolate", "_parent", "_timestamp", "_ttl"].forEach (type) =>
       if @meta.indexOf(type) >= 0
         if !options[type]
           headers[type] = @[type]

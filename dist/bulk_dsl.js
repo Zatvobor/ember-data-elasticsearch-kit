@@ -28,6 +28,16 @@
       return this.responce;
     };
 
+    BulkDSL.refresh = function(url) {
+      var hash;
+      hash = {};
+      hash.url = "%@/_refresh".fmt(url);
+      hash.async = false;
+      hash.type = 'POST';
+      hash.contentType = 'application/json; charset=utf-8';
+      return Ember.$.ajax(hash);
+    };
+
     function BulkDSL(options, documents) {
       this.options = options;
       this.documents = documents;
@@ -68,7 +78,7 @@
       var headers,
         _this = this;
       headers = {};
-      ["_type", "_index", "_version", "_routing", "_percolate", "_parent", "_timestamp", "_ttl"].forEach(function(type) {
+      ["_type", "_index", "_version", "_routing", "_refresh", "_percolate", "_parent", "_timestamp", "_ttl"].forEach(function(type) {
         if (_this.meta.indexOf(type) >= 0) {
           if (!options[type]) {
             headers[type] = _this[type];

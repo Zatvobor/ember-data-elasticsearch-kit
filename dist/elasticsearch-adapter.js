@@ -11,6 +11,7 @@
       if (namespace) {
         url.push(namespace);
       }
+      url.push(Ember.get(this, "url"));
       url = url.join("/");
       if (!host) {
         url = "/" + url;
@@ -65,40 +66,51 @@
     },
     find: function(store, type, id) {
       var normalizeResponce;
-      return normalizeResponce = function(data) {
+      normalizeResponce = function(data) {
         var _modelJson;
         _modelJson = {};
         _modelJson[type.typeKey] = data['_source'];
         return _modelJson;
       };
+      return this.ajax(id, 'GET', normalizeResponce);
     },
     findMany: function(store, type, ids) {
       var data, normalizeResponce;
       data = {
         ids: ids
       };
-      return normalizeResponce = function(data) {
+      normalizeResponce = function(data) {
         var json;
         json = {};
         json[Ember.String.pluralize(type.typeKey)] = data['docs'].getEach('_source');
         return json;
       };
+      return this.ajax('_mget', 'POST', normalizeResponce, {
+        data: data
+      });
     },
     findQuery: function(store, type, query, modelArray) {
       var normalizeResponce;
-      return normalizeResponce = function(data) {
+      normalizeResponce = function(data) {
         var json, _type,
           _this = this;
         json = {};
         _type = Ember.String.pluralize(type.typeKey);
+        modelArray.set('total', data['hits'].total);
         json[_type] = data['hits']['hits'].getEach('_source');
         json[_type].forEach(function(item) {
           if (item._id && !item.id) {
             return item.id = item._id;
           }
         });
+        if (query.fields && query.fields.length === 0) {
+          json[_type] = data['hits']['hits'].getEach('_id');
+        }
         return json;
       };
+      return this.ajax('_search', 'POST', normalizeResponce, {
+        data: query
+      });
     },
     createRecord: function(store, type, record) {},
     updateRecord: function(store, type, record) {},
