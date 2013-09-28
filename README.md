@@ -16,4 +16,7 @@ ember-data-elasticsearch-kit
                   @filter ->
                     @term {status: "Closed"}
                 @range {updated_at: {gte: time}}
+    store.find(model, json).then (result) =>
+      result.get('total') #=> total results
+    
 ```
