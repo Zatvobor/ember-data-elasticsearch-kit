@@ -62,7 +62,7 @@
         });
       });
     });
-    return describe('create, update, delete', function() {
+    describe('create, update, delete', function() {
       it("create document", function() {
         return runs(function() {
           var model;
@@ -112,6 +112,42 @@
             model.deleteRecord();
             model.save();
             return expect(model.get('isDeleted')).toBe(true);
+          });
+        });
+      });
+    });
+    return describe("facets", function() {
+      return it("returns facets as json", function() {
+        var facet, json, models;
+        models = void 0;
+        this.subject.loadFacets();
+        facet = QueryDSL.query(function() {
+          return this.terms({
+            field: "tags"
+          });
+        });
+        json = QueryDSL.filter(function() {
+          this.terms({
+            tags: ["elixir", "ruby"]
+          });
+          return this.facets(function() {
+            return {
+              global_tags: $.extend({
+                global: true
+              }, facet.query),
+              current_tags: facet.query
+            };
+          });
+        });
+        return runs(function() {
+          window.Fixture.store.find('user', json).then(function(_models) {
+            return models = _models;
+          });
+          waitsFor(function() {
+            return models !== void 0;
+          });
+          return runs(function() {
+            return expect(models.get('total')).toEqual(2);
           });
         });
       });

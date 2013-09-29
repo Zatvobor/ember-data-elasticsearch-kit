@@ -76,3 +76,23 @@ describe 'DS.ElasticSearchAdapter', ->
           model.deleteRecord()
           model.save()
           expect(model.get('isDeleted')).toBe(true)
+
+  describe "facets", ->
+    it "returns facets as json", ->
+      models = undefined
+      @subject.loadFacets()
+      facet = QueryDSL.query ->
+        @terms {field: "tags"}
+      json = QueryDSL.filter ->
+        @terms {tags: ["elixir", "ruby"]}
+        @facets ->
+          {global_tags: $.extend({global: true}, facet.query),
+          current_tags: facet.query}
+      runs ->
+        window.Fixture.store.find('user', json).then (_models) ->
+          models = _models
+        waitsFor ->
+          models != undefined
+
+        runs ->
+          expect(models.get('total')).toEqual(2)

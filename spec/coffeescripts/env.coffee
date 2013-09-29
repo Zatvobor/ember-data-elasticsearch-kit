@@ -35,6 +35,20 @@ class @TestEnv
       @create {id: 5, name: "bar5", job: "foo bar test"}
     BulkDSL.refresh('http://localhost:9200/test_adapter')
 
+  loadFacets: ->
+    MappingDSL.delete("http://localhost:9200/test_adapter")
+    mapping = MappingDSL.mapping ->
+      @mapping "user", ->
+        @mapping "title", type: "string", boost: 2.0, analyzer: "snowball"
+        @mapping "tags", type: "string", analyzer: "keyword"
+    MappingDSL.create("http://localhost:9200/test_adapter", mapping)
+    BulkDSL.store {host: "http://localhost:9200/test_adapter", index: "test_adapter", type: "user"}, ->
+      @create id: 1, title: "One", tags: ["elixir"]
+      @create id: 2, title: "Two", tags: ["elixir", "ruby"]
+      @create id: 3, title: "Three", tags: ["java"]
+      @create id: 4, title: "Four", tags: ["erlang"]
+    BulkDSL.refresh('http://localhost:9200/test_adapter')
+
 window.setupStore = (options) ->
   env = {}
 

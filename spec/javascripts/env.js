@@ -70,6 +70,52 @@
       return BulkDSL.refresh('http://localhost:9200/test_adapter');
     };
 
+    TestEnv.prototype.loadFacets = function() {
+      var mapping;
+      MappingDSL["delete"]("http://localhost:9200/test_adapter");
+      mapping = MappingDSL.mapping(function() {
+        return this.mapping("user", function() {
+          this.mapping("title", {
+            type: "string",
+            boost: 2.0,
+            analyzer: "snowball"
+          });
+          return this.mapping("tags", {
+            type: "string",
+            analyzer: "keyword"
+          });
+        });
+      });
+      MappingDSL.create("http://localhost:9200/test_adapter", mapping);
+      BulkDSL.store({
+        host: "http://localhost:9200/test_adapter",
+        index: "test_adapter",
+        type: "user"
+      }, function() {
+        this.create({
+          id: 1,
+          title: "One",
+          tags: ["elixir"]
+        });
+        this.create({
+          id: 2,
+          title: "Two",
+          tags: ["elixir", "ruby"]
+        });
+        this.create({
+          id: 3,
+          title: "Three",
+          tags: ["java"]
+        });
+        return this.create({
+          id: 4,
+          title: "Four",
+          tags: ["erlang"]
+        });
+      });
+      return BulkDSL.refresh('http://localhost:9200/test_adapter');
+    };
+
     return TestEnv;
 
   })();

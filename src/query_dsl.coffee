@@ -15,6 +15,15 @@ class @QueryDSL
     fun.call(new QueryDSL(@_query.filter))
     @_query
 
+  @facets: (fun) ->
+    @_query = {facets: {}}
+    fun.call(new QueryDSL(@_query.facets))
+    @_query
+
+  facets: (fun) ->
+    opts =  fun.call(@)
+    QueryDSL._query.facets = opts
+
   #for dsl query
   query: (options, fun) ->
     @_addWithFunction('query', options, fun)
@@ -431,6 +440,43 @@ class @QueryDSL
 
   script: (options) ->
     @_add('script', options)
+
+  #FACETS
+
+  ###
+    http://www.elasticsearch.org/guide/reference/api/search/facets/histogram-facet/
+  ###
+
+  histogram: (options) ->
+    @_add('histogram', options)
+
+  ###
+    http://www.elasticsearch.org/guide/reference/api/search/facets/date-histogram-facet/
+  ###
+
+  date_histogram: (options) ->
+    @_add('date_histogram', options)
+
+  ###
+    http://www.elasticsearch.org/guide/reference/api/search/facets/statistical-facet/
+  ###
+
+  statistical: (options) ->
+    @_add('statistical', options)
+
+  ###
+    http://www.elasticsearch.org/guide/reference/api/search/facets/terms-stats-facet/
+  ###
+
+  terms_stats: (options) ->
+    @_add('terms_stats', options)
+
+  ###
+    http://www.elasticsearch.org/guide/reference/api/search/facets/geo-distance-facet/
+  ###
+
+  geo_distance: (options) ->
+    @_add('geo_distance', options)
 
   #private methods
 

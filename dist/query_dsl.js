@@ -22,6 +22,20 @@
       return this._query;
     };
 
+    QueryDSL.facets = function(fun) {
+      this._query = {
+        facets: {}
+      };
+      fun.call(new QueryDSL(this._query.facets));
+      return this._query;
+    };
+
+    QueryDSL.prototype.facets = function(fun) {
+      var opts;
+      opts = fun.call(this);
+      return QueryDSL._query.facets = opts;
+    };
+
     QueryDSL.prototype.query = function(options, fun) {
       return this._addWithFunction('query', options, fun);
     };
@@ -551,6 +565,51 @@
 
     QueryDSL.prototype.script = function(options) {
       return this._add('script', options);
+    };
+
+    /*
+      http://www.elasticsearch.org/guide/reference/api/search/facets/histogram-facet/
+    */
+
+
+    QueryDSL.prototype.histogram = function(options) {
+      return this._add('histogram', options);
+    };
+
+    /*
+      http://www.elasticsearch.org/guide/reference/api/search/facets/date-histogram-facet/
+    */
+
+
+    QueryDSL.prototype.date_histogram = function(options) {
+      return this._add('date_histogram', options);
+    };
+
+    /*
+      http://www.elasticsearch.org/guide/reference/api/search/facets/statistical-facet/
+    */
+
+
+    QueryDSL.prototype.statistical = function(options) {
+      return this._add('statistical', options);
+    };
+
+    /*
+      http://www.elasticsearch.org/guide/reference/api/search/facets/terms-stats-facet/
+    */
+
+
+    QueryDSL.prototype.terms_stats = function(options) {
+      return this._add('terms_stats', options);
+    };
+
+    /*
+      http://www.elasticsearch.org/guide/reference/api/search/facets/geo-distance-facet/
+    */
+
+
+    QueryDSL.prototype.geo_distance = function(options) {
+      return this._add('geo_distance', options);
     };
 
     QueryDSL.prototype._extractFun = function(options, fun, optionsType) {
