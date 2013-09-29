@@ -76,6 +76,10 @@ DS.ElasticSearchAdapter = DS.Adapter.extend
       modelArray.set('total', data['hits'].total)
 
       json[_type] = data['hits']['hits'].getEach('_source')
+      if data.facets
+        Object.keys(data.facets).forEach (key) =>
+          modelArray.set(key, data.facets[key])
+
       json[_type].forEach (item) =>
         if item._id && !item.id
           item.id = item._id

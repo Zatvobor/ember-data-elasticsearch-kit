@@ -95,4 +95,5 @@ describe 'DS.ElasticSearchAdapter', ->
           models != undefined
 
         runs ->
-          expect(models.get('total')).toEqual(2)
+          expect(models.get('global_tags').total).toEqual(4)
+          expect(models.get('current_tags').total).toEqual(4)

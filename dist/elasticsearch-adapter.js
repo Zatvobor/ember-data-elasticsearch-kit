@@ -98,6 +98,11 @@
         _type = Ember.String.pluralize(type.typeKey);
         modelArray.set('total', data['hits'].total);
         json[_type] = data['hits']['hits'].getEach('_source');
+        if (data.facets) {
+          Object.keys(data.facets).forEach(function(key) {
+            return modelArray.set(key, data.facets[key]);
+          });
+        }
         json[_type].forEach(function(item) {
           if (item._id && !item.id) {
             return item.id = item._id;
