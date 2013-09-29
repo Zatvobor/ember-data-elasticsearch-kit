@@ -26,6 +26,7 @@ class @TestEnv
     window.User = DS.Model.extend
       name: DS.attr('string')
       job: DS.attr('string')
+      tags: DS.attr('array')
 
   loadData: ->
     BulkDSL.store {host: "http://localhost:9200/test_adapter", index: "test_adapter", type: "user"}, ->
@@ -67,6 +68,7 @@ window.setupStore = (options) ->
   container.register 'transform:date', DS.DateTransform
   container.register 'transform:number', DS.NumberTransform
   container.register 'transform:string', DS.StringTransform
+  container.register 'transform:array', ArrayTransform
 
   container.injection "serializer", "store", "store:main"
 

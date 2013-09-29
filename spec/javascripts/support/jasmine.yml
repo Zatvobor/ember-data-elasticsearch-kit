@@ -3,6 +3,7 @@ src_files:
   - vendor/assets/javascripts/handlebars.js
   - vendor/assets/javascripts/ember.js
   - vendor/assets/javascripts/**/*.js
+  - dist/transforms.js
   - dist/query_dsl.js
   - dist/mapping_dsl.js
   - dist/bulk_dsl.js

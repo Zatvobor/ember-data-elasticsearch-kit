@@ -36,7 +36,8 @@
     TestEnv.prototype.models = function() {
       return window.User = DS.Model.extend({
         name: DS.attr('string'),
-        job: DS.attr('string')
+        job: DS.attr('string'),
+        tags: DS.attr('array')
       });
     };
 
@@ -141,6 +142,7 @@
     container.register('transform:date', DS.DateTransform);
     container.register('transform:number', DS.NumberTransform);
     container.register('transform:string', DS.StringTransform);
+    container.register('transform:array', ArrayTransform);
     container.injection("serializer", "store", "store:main");
     env.serializer = container.lookup("serializer:_default");
     env.restSerializer = container.lookup("serializer:_rest");
