@@ -1,0 +1,36 @@
+{
+  "name": "ember-data-elasticsearch-kit",
+  "version": "1.0.0",
+  "description": "An ember-data kit for both building and querying Elasticsearch cluster",
+  "main": "dist/ember-data-elasticsearch-kit.js",
+  "author": "Opak Alex <a.opak@roundscope.com>",
+  "license": "MIT",
+
+  "keywords": [
+    "ember",
+    "ember-data",
+    "elasticsearch"
+  ],
+
+  "bugs": {
+    "url": "https://github.com/roundscope/ember-data-elasticsearch-kit/issues"
+  },
+
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/roundscope/ember-data-elasticsearch-kit.git"
+  },
+
+  "devDependencies": [
+    "grunt-contrib-concat",
+    "grunt-contrib-coffee"
+  ],
+
+  "engines": {
+    "node": ">=v0.10.1"
+  }
+}

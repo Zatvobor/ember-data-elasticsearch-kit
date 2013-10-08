@@ -1,4 +1,186 @@
 (function() {
+  DS.ElasticSearchAdapter = DS.Adapter.extend({
+    buildURL: function() {
+      var host, namespace, url;
+      host = Ember.get(this, "host");
+      namespace = Ember.get(this, "namespace");
+      url = [];
+      if (host) {
+        url.push(host);
+      }
+      if (namespace) {
+        url.push(namespace);
+      }
+      url.push(Ember.get(this, "url"));
+      url = url.join("/");
+      if (!host) {
+        url = "/" + url;
+      }
+      return url;
+    },
+    ajax: function(url, type, normalizeResponce, hash) {
+      return this._ajax('%@/%@'.fmt(this.buildURL(), url || ''), type, normalizeResponce, hash);
+    },
+    _ajax: function(url, type, normalizeResponce, hash) {
+      var adapter;
+      if (hash == null) {
+        hash = {};
+      }
+      adapter = this;
+      return new Ember.RSVP.Promise(function(resolve, reject) {
+        var headers;
+        if (url.split("/").pop() === "") {
+          url = url.substr(0, url.length - 1);
+        }
+        hash.url = url;
+        hash.type = type;
+        hash.dataType = 'json';
+        hash.contentType = 'application/json; charset=utf-8';
+        hash.context = adapter;
+        if (hash.data && type !== 'GET') {
+          hash.data = JSON.stringify(hash.data);
+        }
+        if (adapter.headers) {
+          headers = adapter.headers;
+          hash.beforeSend = function(xhr) {
+            return forEach.call(Ember.keys(headers), function(key) {
+              return xhr.setRequestHeader(key, headers[key]);
+            });
+          };
+        }
+        if (!hash.success) {
+          hash.success = function(json) {
+            var _modelJson;
+            _modelJson = normalizeResponce.call(adapter, json);
+            return Ember.run(null, resolve, _modelJson);
+          };
+        }
+        hash.error = function(jqXHR, textStatus, errorThrown) {
+          if (jqXHR) {
+            jqXHR.then = null;
+          }
+          return Ember.run(null, reject, jqXHR);
+        };
+        return Ember.$.ajax(hash);
+      });
+    },
+    find: function(store, type, id) {
+      var normalizeResponce;
+      normalizeResponce = function(data) {
+        var _modelJson;
+        _modelJson = {};
+        _modelJson[type.typeKey] = data['_source'];
+        return _modelJson;
+      };
+      return this.ajax(id, 'GET', normalizeResponce);
+    },
+    findMany: function(store, type, ids) {
+      var data, normalizeResponce;
+      data = {
+        ids: ids
+      };
+      normalizeResponce = function(data) {
+        var json;
+        json = {};
+        json[Ember.String.pluralize(type.typeKey)] = data['docs'].getEach('_source');
+        return json;
+      };
+      return this.ajax('_mget', 'POST', normalizeResponce, {
+        data: data
+      });
+    },
+    findQuery: function(store, type, query, modelArray) {
+      var normalizeResponce;
+      normalizeResponce = function(data) {
+        var json, _type,
+          _this = this;
+        json = {};
+        _type = Ember.String.pluralize(type.typeKey);
+        modelArray.set('total', data['hits'].total);
+        json[_type] = data['hits']['hits'].getEach('_source');
+        if (data.facets) {
+          Object.keys(data.facets).forEach(function(key) {
+            return modelArray.set(key, data.facets[key]);
+          });
+        }
+        json[_type].forEach(function(item) {
+          if (item._id && !item.id) {
+            return item.id = item._id;
+          }
+        });
+        if (query.fields && query.fields.length === 0) {
+          json[_type] = data['hits']['hits'].getEach('_id');
+        }
+        return json;
+      };
+      return this.ajax('_search', 'POST', normalizeResponce, {
+        data: query
+      });
+    },
+    createRecord: function(store, type, record) {
+      var normalizeResponce, rawJson;
+      rawJson = store.serializerFor(type.typeKey).serialize(record);
+      normalizeResponce = function(data) {
+        var id, json;
+        json = {};
+        id = data._id || data.id;
+        json[type.typeKey] = $.extend({
+          id: id
+        }, rawJson);
+        return json;
+      };
+      return this.ajax('', 'POST', normalizeResponce, {
+        data: rawJson
+      });
+    },
+    updateRecord: function(store, type, record) {
+      var normalizeResponce, rawJson;
+      rawJson = store.serializerFor(type.typeKey).serialize(record);
+      normalizeResponce = function(data) {
+        var json;
+        rawJson.id = data._id;
+        json = {};
+        json[type.typeKey] = rawJson;
+        return json;
+      };
+      return this.ajax(record.get('id'), 'PUT', normalizeResponce, {
+        data: rawJson
+      });
+    },
+    deleteRecord: function(store, type, record) {
+      return this.ajax(record.get('id'), 'DELETE', (function() {}));
+    }
+  });
+
+}).call(this);
+
+(function() {
+  this.ArrayTransform = DS.Transform.extend({
+    deserialize: function(serialized) {
+      switch (Em.typeOf(serialized)) {
+        case 'array':
+          return serialized;
+        case 'string':
+          return serialized.split(',').map(function(item) {
+            return jQuery.trim(item);
+          });
+        default:
+          return [];
+      }
+    },
+    serialize: function(deserialized) {
+      switch (Em.typeOf(deserialized)) {
+        case "array":
+          return deserialized;
+        default:
+          return [];
+      }
+    }
+  });
+
+}).call(this);
+
+(function() {
   this.QueryDSL = (function() {
     QueryDSL._query = {};
 
@@ -655,6 +837,187 @@
     };
 
     return QueryDSL;
+
+  })();
+
+}).call(this);
+
+(function() {
+  this.MappingDSL = (function() {
+    MappingDSL.mapping = function(options, fun) {
+      this._mappings = {
+        mappings: {}
+      };
+      if (fun) {
+        this._mappings.settings = options;
+      } else {
+        fun = options;
+      }
+      fun.call(new MappingDSL(this._mappings.mappings));
+      return this._mappings;
+    };
+
+    MappingDSL.create = function(url, json) {
+      var hash,
+        _this = this;
+      this.responce = void 0;
+      hash = {};
+      hash.url = url;
+      hash.type = "PUT";
+      hash.dataType = 'json';
+      hash.async = false;
+      hash.contentType = 'application/json; charset=utf-8';
+      hash.data = JSON.stringify(json);
+      hash.success = function(data) {
+        return _this.responce = data;
+      };
+      Ember.$.ajax(hash);
+      return this.responce;
+    };
+
+    MappingDSL["delete"] = function(url) {
+      var hash,
+        _this = this;
+      this.responce = void 0;
+      hash = {};
+      hash.url = url;
+      hash.type = "DELETE";
+      hash.async = false;
+      hash.success = function(data) {
+        return _this.responce = data;
+      };
+      Ember.$.ajax(hash);
+      return this.responce;
+    };
+
+    function MappingDSL(_mappings) {
+      this._mappings = _mappings;
+    }
+
+    MappingDSL.prototype.mapping = function(type, options, fun) {
+      var mappings;
+      mappings = {};
+      if (fun || typeof options === 'function') {
+        if (typeof options !== 'function') {
+          options.properties = {};
+          mappings = options;
+        } else {
+          fun = options;
+          mappings.properties = {};
+        }
+        this._mappings[type] = mappings;
+        return fun.call(new MappingDSL(mappings.properties));
+      } else {
+        return this._mappings[type] = options || mappings;
+      }
+    };
+
+    return MappingDSL;
+
+  })();
+
+}).call(this);
+
+(function() {
+  this.BulkDSL = (function() {
+    BulkDSL.store = function(options, fun) {
+      this.documents = [];
+      fun.call(new BulkDSL(options, this.documents));
+      return this.request(options, this.documents);
+    };
+
+    BulkDSL.url = function(options) {
+      return "%@/%@".fmt(options.host, "_bulk");
+    };
+
+    BulkDSL.request = function(options, json) {
+      var hash,
+        _this = this;
+      this.responce = void 0;
+      hash = {};
+      hash.url = this.url(options);
+      hash.type = "POST";
+      hash.dataType = 'json';
+      hash.async = false;
+      hash.contentType = 'application/json; charset=utf-8';
+      hash.data = json.join("\n");
+      hash.success = function(data) {
+        return _this.responce = data;
+      };
+      Ember.$.ajax(hash);
+      return this.responce;
+    };
+
+    BulkDSL.refresh = function(url) {
+      var hash;
+      hash = {};
+      hash.url = "%@/_refresh".fmt(url);
+      hash.async = false;
+      hash.type = 'POST';
+      hash.contentType = 'application/json; charset=utf-8';
+      return Ember.$.ajax(hash);
+    };
+
+    function BulkDSL(options, documents) {
+      this.options = options;
+      this.documents = documents;
+      this.meta = ["_type", "_index"];
+      this._index = this.options.index;
+      this._type = this.options.type || "document";
+    }
+
+    BulkDSL.prototype.create = function(options) {
+      this.documents.push(JSON.stringify({
+        create: this._createHeader(options)
+      }));
+      return this.documents.push(JSON.stringify(options));
+    };
+
+    BulkDSL.prototype["delete"] = function(options) {
+      this.documents.push(JSON.stringify({
+        "delete": this._createHeader(options)
+      }));
+      return this.documents.push(JSON.stringify(options));
+    };
+
+    BulkDSL.prototype.index = function(options) {
+      this.documents.push(JSON.stringify({
+        index: this._createHeader(options)
+      }));
+      return this.documents.push(JSON.stringify(options));
+    };
+
+    BulkDSL.prototype.update = function(options) {
+      this.documents.push(JSON.stringify({
+        update: this._createHeader(options)
+      }));
+      return this.documents.push(JSON.stringify(options));
+    };
+
+    BulkDSL.prototype._createHeader = function(options) {
+      var headers,
+        _this = this;
+      headers = {};
+      ["_type", "_index", "_version", "_routing", "_refresh", "_percolate", "_parent", "_timestamp", "_ttl"].forEach(function(type) {
+        if (_this.meta.indexOf(type) >= 0) {
+          if (!options[type]) {
+            headers[type] = _this[type];
+          } else {
+            headers[type] = options[type];
+            delete options[type];
+          }
+        } else {
+          if (options[type]) {
+            headers[type] = options[type];
+            delete options[type];
+          }
+        }
+        return headers._id = options.id;
+      });
+      return headers;
+    };
+
+    return BulkDSL;
 
   })();
 
