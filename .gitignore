@@ -4,3 +4,4 @@ vendor/bundle
 .rvmrc
 bin/
 node_modules/*
+spec/ember-data-elasticsearch-kit_spec.js
