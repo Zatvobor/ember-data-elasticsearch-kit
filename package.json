@@ -26,8 +26,8 @@
   },
 
   "devDependencies": [
-    "grunt-contrib-concat",
-    "grunt-contrib-coffee"
+    "grunt-contrib-coffee",
+    "grunt-contrib-uglify"
   ],
 
   "engines": {

@@ -14,12 +14,22 @@ module.exports = function(grunt) {
           'src/bulk_dsl.coffee'
         ]}
       }
+    },
+
+    uglify: {
+      options: { mangle: false, compress: false },
+
+      dist: {
+        src: 'dist/ember-data-elasticsearch-kit.js',
+        dest: 'dist/ember-data-elasticsearch-kit.min.js'
+      }
     }
 
   });
 
   grunt.loadNpmTasks('grunt-contrib-coffee');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
 
 
-  grunt.registerTask('default', ['coffee']);
+  grunt.registerTask('default', ['coffee', 'uglify']);
 };
