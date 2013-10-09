@@ -25,7 +25,7 @@ Instalation
 ===========
 
 ```bash
-wget http://roundscope.github.io/ember-data-elasticsearch-kit/dist/ember-data-elasticsearch-kit.min.js .
+wget -O ember-data-elasticsearch-kit.min.js http://goo.gl/VXlbXx
 ```
 
 
