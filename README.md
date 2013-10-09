@@ -1,25 +1,62 @@
 ember-data-elasticsearch-kit
 ============================
-```coffee
-    json =
-      EDEK.QueryDSL.filter ->
-        @and ->
-          @filters ->
-            @or ->
-              @filters ->
-                @term  { requester: email }
-                @term  { owner: email }
-                @terms { people: [email] }
-            @or ->
-              @filters ->
-                @not ->
-                  @filter ->
-                    @term {status: "Closed"}
-                @range {updated_at: {gte: time}}
 
-    store.find(model, json).then (result) =>
-      result.get('total') #=> total results
+You're able to use this library as `ember-data` adapter for working with `elasticsearch` appliance.
+
+Moreover, this library ships with useful DSL conviniences for creating `mappings` and `queries` and many other features such as `bulk` and so on.
+
+Let's consider some partials from `spec/mapping_dsl_spec.coffee`:
+
+```coffee
+  beforeEach ->
+    @subject = EDEK.MappingDSL
+
+  it "creates simpe mapping in general", ->
+    mapping = @subject.mapping ->
+      @mapping "user", ->
+        @mapping "firstName", type: "string"
+        @mapping "lastName", type: "string"
+
+    expect(mapping).toEqual({
+      mappings: {
+        user: {
+          properties:{
+            firstName: {type: "string"},
+            lastName: {type: "string"}
+          }
+        }
+      }
+    })
+
+   it 'creates nested mapping', ->
+    mapping = @subject.mapping ->
+      @mapping "user", ->
+        @mapping "firstName", type: "string"
+        @mapping "lastName", type: "string"
+        @mapping "avatar", type: "nested", ->
+          @mapping "id", type: "long"
+          @mapping "url", type: "string"
+
+    expect(mapping).toEqual({
+      mappings: {
+        user: {
+          properties: {
+            firstName: {type: "string"},
+            lastName: {type: "string"},
+            avatar: {
+              type: "nested",
+              properties: {
+                id: {type: "long"},
+                url: {type: "string"}
+              }
+            }
+          }
+          }
+        }
+    })
 ```
+
+Other things and examples you could dig from `spec`s directory.
 
 Instalation
 ===========
