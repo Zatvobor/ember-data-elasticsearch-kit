@@ -1,4 +1,4 @@
-@ArrayTransform = DS.Transform.extend
+EDEK.ArrayTransform = DS.Transform.extend
 
   deserialize: (serialized) ->
     switch Em.typeOf(serialized)

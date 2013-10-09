@@ -1,11 +1,11 @@
-class @MappingDSL
+class EDEK.MappingDSL
   @mapping: (options, fun) ->
     @_mappings = {mappings: {}}
     if fun
       @_mappings.settings = options
     else
       fun = options
-    fun.call(new MappingDSL(@_mappings.mappings))
+    fun.call(new EDEK.MappingDSL(@_mappings.mappings))
     @_mappings
 
   @create: (url, json) ->
@@ -44,7 +44,7 @@ class @MappingDSL
         fun = options
         mappings.properties = {}
       @_mappings[type] = mappings
-      fun.call(new MappingDSL(mappings.properties))
+      fun.call(new EDEK.MappingDSL(mappings.properties))
     else
       @_mappings[type] = (options || mappings)
 

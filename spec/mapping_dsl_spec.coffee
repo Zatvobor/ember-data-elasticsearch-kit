@@ -1,7 +1,7 @@
 describe 'MappingDSL', ->
 
   beforeEach ->
-    @subject = MappingDSL
+    @subject = EDEK.MappingDSL
 
   it "create simpe mapping", ->
     mapping = @subject.mapping ->

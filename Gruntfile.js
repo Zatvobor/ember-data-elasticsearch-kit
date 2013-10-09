@@ -8,6 +8,7 @@ module.exports = function(grunt) {
       compile: {
         files: { 
           'dist/ember-data-elasticsearch-kit.js': [ 
+            'src/ember-data-elasticsearch-kit.coffee',
             'src/elasticsearch-adapter.coffee',
             'src/transforms.coffee',
             'src/query_dsl.coffee',

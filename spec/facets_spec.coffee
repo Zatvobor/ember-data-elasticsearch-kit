@@ -1,7 +1,7 @@
 describe 'Facets', ->
 
   beforeEach ->
-    @subject = QueryDSL
+    @subject = EDEK.QueryDSL
 
   it "custom facet name", ->
     facet = @subject.query ->

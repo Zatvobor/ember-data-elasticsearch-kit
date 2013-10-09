@@ -1,7 +1,7 @@
 describe 'QueryDSL', ->
 
   beforeEach ->
-    @subject = QueryDSL
+    @subject = EDEK.QueryDSL
 
   it "match-query", ->
     json = @subject.query ->

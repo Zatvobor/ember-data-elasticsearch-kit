@@ -1,4 +1,4 @@
-class @QueryDSL
+class EDEK.QueryDSL
   @_query: {}
 
   constructor: (@_query) ->

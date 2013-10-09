@@ -1,12 +1,12 @@
 describe 'BulkDSL', ->
 
   beforeEach ->
-    @subject = BulkDSL
+    @subject = EDEK.BulkDSL
 
   it "create docs", ->
 
-    MappingDSL.delete("http://localhost:9200/test_index")
-    MappingDSL.create("http://localhost:9200/test_index", {})
+    EDEK.MappingDSL.delete("http://localhost:9200/test_index")
+    EDEK.MappingDSL.create("http://localhost:9200/test_index", {})
 
     @subject.store {host: "http://localhost:9200/test_index", index: "test_index"}, ->
       @create {id: 2, title: "bar2", description: "foo bar test"}

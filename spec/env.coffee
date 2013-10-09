@@ -4,10 +4,10 @@ class @DatabaseCleaner
     @create()
 
   @create: ->
-    MappingDSL.create("http://localhost:9200/test_adapter")
+    EDEK.MappingDSL.create("http://localhost:9200/test_adapter")
 
   @destroy: ->
-    MappingDSL.delete("http://localhost:9200/test_adapter")
+    EDEK.MappingDSL.delete("http://localhost:9200/test_adapter")
 
 class @TestEnv
 
@@ -29,26 +29,26 @@ class @TestEnv
       tags: DS.attr('array')
 
   loadData: ->
-    BulkDSL.store {host: "http://localhost:9200/test_adapter", index: "test_adapter", type: "user"}, ->
+    EDEK.BulkDSL.store {host: "http://localhost:9200/test_adapter", index: "test_adapter", type: "user"}, ->
       @create {id: 2, name: "bar2", job: "foo bar test"}
       @create {id: 3, name: "bar3", job: "foo bar test"}
       @create {id: 4, name: "bar4", job: "foo bar test"}
       @create {id: 5, name: "bar5", job: "foo bar test"}
-    BulkDSL.refresh('http://localhost:9200/test_adapter')
+    EDEK.BulkDSL.refresh('http://localhost:9200/test_adapter')
 
   loadFacets: ->
-    MappingDSL.delete("http://localhost:9200/test_adapter")
-    mapping = MappingDSL.mapping ->
+    EDEK.MappingDSL.delete("http://localhost:9200/test_adapter")
+    mapping = EDEK.MappingDSL.mapping ->
       @mapping "user", ->
         @mapping "title", type: "string", boost: 2.0, analyzer: "snowball"
         @mapping "tags", type: "string", analyzer: "keyword"
-    MappingDSL.create("http://localhost:9200/test_adapter", mapping)
-    BulkDSL.store {host: "http://localhost:9200/test_adapter", index: "test_adapter", type: "user"}, ->
+    EDEK.MappingDSL.create("http://localhost:9200/test_adapter", mapping)
+    EDEK.BulkDSL.store {host: "http://localhost:9200/test_adapter", index: "test_adapter", type: "user"}, ->
       @create id: 1, title: "One", tags: ["elixir"]
       @create id: 2, title: "Two", tags: ["elixir", "ruby"]
       @create id: 3, title: "Three", tags: ["java"]
       @create id: 4, title: "Four", tags: ["erlang"]
-    BulkDSL.refresh('http://localhost:9200/test_adapter')
+    EDEK.BulkDSL.refresh('http://localhost:9200/test_adapter')
 
 window.setupStore = (options) ->
   env = {}
@@ -68,7 +68,7 @@ window.setupStore = (options) ->
   container.register 'transform:date', DS.DateTransform
   container.register 'transform:number', DS.NumberTransform
   container.register 'transform:string', DS.StringTransform
-  container.register 'transform:array', ArrayTransform
+  container.register 'transform:array', EDEK.ArrayTransform
 
   container.injection "serializer", "store", "store:main"
 

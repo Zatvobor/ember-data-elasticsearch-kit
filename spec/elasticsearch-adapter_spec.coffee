@@ -15,7 +15,7 @@ describe 'DS.ElasticSearchAdapter', ->
 
     it "by query", ->
       @subject.loadData()
-      json = QueryDSL.query ->
+      json = EDEK.QueryDSL.query ->
         @match {job: {query: "bar"}}
       runs ->
         model =  window.Fixture.store.find('user', json)
@@ -28,7 +28,7 @@ describe 'DS.ElasticSearchAdapter', ->
     it 'get total', ->
       model = undefined
       @subject.loadData()
-      json = QueryDSL.query ->
+      json = EDEK.QueryDSL.query ->
         @match {job: {query: "bar"}}
       runs ->
         window.Fixture.store.find('user', json).then (_model) ->
@@ -81,9 +81,9 @@ describe 'DS.ElasticSearchAdapter', ->
     it "returns facets as json", ->
       models = undefined
       @subject.loadFacets()
-      facet = QueryDSL.query ->
+      facet = EDEK.QueryDSL.query ->
         @terms {field: "tags"}
-      json = QueryDSL.filter ->
+      json = EDEK.QueryDSL.filter ->
         @terms {tags: ["elixir", "ruby"]}
         @facets ->
           {global_tags: $.extend({global: true}, facet.query),

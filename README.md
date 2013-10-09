@@ -1,8 +1,8 @@
 ember-data-elasticsearch-kit
 ============================
-```
+```coffee
     json =
-      QueryDSL.filter ->
+      EDEK.QueryDSL.filter ->
         @and ->
           @filters ->
             @or ->
@@ -16,9 +16,9 @@ ember-data-elasticsearch-kit
                   @filter ->
                     @term {status: "Closed"}
                 @range {updated_at: {gte: time}}
+
     store.find(model, json).then (result) =>
       result.get('total') #=> total results
-    
 ```
 
 

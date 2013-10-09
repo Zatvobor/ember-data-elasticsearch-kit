@@ -1,7 +1,7 @@
-class @BulkDSL
+class EDEK.BulkDSL
   @store: (options, fun) ->
     @documents = []
-    fun.call(new BulkDSL(options, @documents))
+    fun.call(new EDEK.BulkDSL(options, @documents))
     @request(options, @documents)
 
   @url: (options) ->

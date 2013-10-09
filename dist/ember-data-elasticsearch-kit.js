@@ -1,4 +1,11 @@
 (function() {
+  window.EDEK = window.EmberDataElasticsearchKit = Ember.Namespace.create({
+    VERSION: '1.0.0'
+  });
+
+}).call(this);
+
+(function() {
   DS.ElasticSearchAdapter = DS.Adapter.extend({
     buildURL: function() {
       var host, namespace, url;
@@ -155,7 +162,7 @@
 }).call(this);
 
 (function() {
-  this.ArrayTransform = DS.Transform.extend({
+  EDEK.ArrayTransform = DS.Transform.extend({
     deserialize: function(serialized) {
       switch (Em.typeOf(serialized)) {
         case 'array':
@@ -181,7 +188,7 @@
 }).call(this);
 
 (function() {
-  this.QueryDSL = (function() {
+  EDEK.QueryDSL = (function() {
     QueryDSL._query = {};
 
     function QueryDSL(_query) {
@@ -843,7 +850,7 @@
 }).call(this);
 
 (function() {
-  this.MappingDSL = (function() {
+  EDEK.MappingDSL = (function() {
     MappingDSL.mapping = function(options, fun) {
       this._mappings = {
         mappings: {}
@@ -853,7 +860,7 @@
       } else {
         fun = options;
       }
-      fun.call(new MappingDSL(this._mappings.mappings));
+      fun.call(new EDEK.MappingDSL(this._mappings.mappings));
       return this._mappings;
     };
 
@@ -906,7 +913,7 @@
           mappings.properties = {};
         }
         this._mappings[type] = mappings;
-        return fun.call(new MappingDSL(mappings.properties));
+        return fun.call(new EDEK.MappingDSL(mappings.properties));
       } else {
         return this._mappings[type] = options || mappings;
       }
@@ -919,10 +926,10 @@
 }).call(this);
 
 (function() {
-  this.BulkDSL = (function() {
+  EDEK.BulkDSL = (function() {
     BulkDSL.store = function(options, fun) {
       this.documents = [];
-      fun.call(new BulkDSL(options, this.documents));
+      fun.call(new EDEK.BulkDSL(options, this.documents));
       return this.request(options, this.documents);
     };
 
