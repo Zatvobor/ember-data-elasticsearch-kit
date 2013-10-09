@@ -21,6 +21,13 @@ ember-data-elasticsearch-kit
       result.get('total') #=> total results
 ```
 
+Instalation
+===========
+
+```bash
+wget http://roundscope.github.io/ember-data-elasticsearch-kit/dist/ember-data-elasticsearch-kit.min.js .
+```
+
 
 MIT License
 ===========
