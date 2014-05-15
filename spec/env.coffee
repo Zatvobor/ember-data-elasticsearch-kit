@@ -61,7 +61,7 @@ window.setupStore = (options) ->
 
   for prop of options
     container.register "model:" + prop, options[prop]
-  container.register "serializer:_default", DS.RESTSerializer
+  container.register "serializer:-default", DS.RESTSerializer
   container.register "store:main", DS.Store.extend(adapter: adapter)
 
   container.register 'transform:boolean', DS.BooleanTransform
