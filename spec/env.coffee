@@ -13,7 +13,15 @@ class @TestEnv
 
   constructor: ->
     DatabaseCleaner.reset()
-
+    
+    window.async = (cb) ->
+      stop()
+      ->
+        start()
+        args = arguments
+        Em.run ->
+          cb.apply @, args
+    
     unless window.Fixture
       @models()
 

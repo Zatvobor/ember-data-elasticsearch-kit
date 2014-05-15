@@ -99,22 +99,25 @@
     findQuery: function(store, type, query, modelArray) {
       var normalizeResponce;
       normalizeResponce = function(data) {
-        var json, _type,
-          _this = this;
+        var json, _type;
         json = {};
         _type = Ember.String.pluralize(type.typeKey);
         modelArray.set('total', data['hits'].total);
         json[_type] = data['hits']['hits'].getEach('_source');
         if (data.facets) {
-          Object.keys(data.facets).forEach(function(key) {
-            return modelArray.set(key, data.facets[key]);
-          });
+          Object.keys(data.facets).forEach((function(_this) {
+            return function(key) {
+              return modelArray.set(key, data.facets[key]);
+            };
+          })(this));
         }
-        json[_type].forEach(function(item) {
-          if (item._id && !item.id) {
-            return item.id = item._id;
-          }
-        });
+        json[_type].forEach((function(_this) {
+          return function(item) {
+            if (item._id && !item.id) {
+              return item.id = item._id;
+            }
+          };
+        })(this));
         if (query.fields && query.fields.length === 0) {
           json[_type] = data['hits']['hits'].getEach('_id');
         }
@@ -233,10 +236,10 @@
       return this._addWithFunction('filter', options, fun);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/query-dsl/match-query/
-    */
-
+     */
 
     QueryDSL.prototype.match = function(options, fun) {
       return this._add('match', options, fun);
@@ -250,46 +253,46 @@
       return this._add('match_phrase_prefix', options);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/query-dsl/multi-match-query/
-    */
-
+     */
 
     QueryDSL.prototype.multi_match = function(options) {
       return this._add('multi_match', options);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/query-dsl/ids-query/
-    */
-
+     */
 
     QueryDSL.prototype.ids = function(options) {
       return this._add('ids', options);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/query-dsl/field-query/
-    */
-
+     */
 
     QueryDSL.prototype.field = function(options) {
       return this._add('field', options);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/query-dsl/flt-query/
-    */
-
+     */
 
     QueryDSL.prototype.flt = function(options) {
       return this._add('fuzzy_like_this', options);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/query-dsl/flt-field-query/
-    */
-
+     */
 
     QueryDSL.prototype.flt_field = function(options) {
       return this.fuzzy_like_this_field(options);
@@ -299,19 +302,19 @@
       return this._add('fuzzy_like_this_field', options);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/query-dsl/fuzzy-query/
-    */
-
+     */
 
     QueryDSL.prototype.fuzzy = function(options) {
       return this._add('fuzzy', options);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/query-dsl/match-all-query/
-    */
-
+     */
 
     QueryDSL.prototype.match_all = function(options) {
       if (options == null) {
@@ -320,10 +323,10 @@
       return this._add('match_all', options);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/query-dsl/mlt-query/
-    */
-
+     */
 
     QueryDSL.prototype.mlt = function(options) {
       return this.more_like_this(options);
@@ -333,109 +336,109 @@
       return this._add('more_like_this', options);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/query-dsl/mlt-field-query/
-    */
-
+     */
 
     QueryDSL.prototype.more_like_this_field = function(options) {
       return this._add('more_like_this_field', options);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/query-dsl/prefix-query/
-    */
-
+     */
 
     QueryDSL.prototype.prefix = function(options) {
       return this._add('prefix', options);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/query-dsl/query-string-query/
-    */
-
+     */
 
     QueryDSL.prototype.query_string = function(options) {
       return this._add('query_string', options);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/query-dsl/range-query/
-    */
-
+     */
 
     QueryDSL.prototype.range = function(options) {
       return this._add('range', options);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/query-dsl/regexp-query/
-    */
-
+     */
 
     QueryDSL.prototype.regexp = function(options) {
       return this._add('regexp', options);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/query-dsl/term-query/
-    */
-
+     */
 
     QueryDSL.prototype.term = function(options) {
       return this._add('term', options);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/query-dsl/terms-query/
-    */
-
+     */
 
     QueryDSL.prototype.terms = function(options) {
       return this._add('terms', options);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/query-dsl/common-terms-query/
-    */
-
+     */
 
     QueryDSL.prototype.common = function(options) {
       return this._add('common', options);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/query-dsl/wildcard-query/
-    */
-
+     */
 
     QueryDSL.prototype.wildcard = function(options) {
       return this._add('wildcard', options);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/query-dsl/text-query/
-    */
-
+     */
 
     QueryDSL.prototype.text = function(options) {
       return this._add('text', options);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/query-dsl/geo-shape-query/
-    */
-
+     */
 
     QueryDSL.prototype.geo_shape = function(options) {
       return this._add('geo_shape', options);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/query-dsl/bool-query/
-    */
-
+     */
 
     QueryDSL.prototype.bool = function(options, fun) {
       return this._addWithFunction('bool', options, fun);
@@ -453,10 +456,10 @@
       return this._addWithFunction('should', options, fun, []);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/query-dsl/boosting-query/
-    */
-
+     */
 
     QueryDSL.prototype.boosting = function(options, fun) {
       return this._addWithFunction('boosting', options, fun);
@@ -470,10 +473,10 @@
       return this._addWithFunction('negative', options, fun);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/query-dsl/custom-score-query/
-    */
-
+     */
 
     QueryDSL.prototype.custom_score = function(options, fun) {
       return this._addWithFunction('custom_score', options, fun);
@@ -483,28 +486,28 @@
       return this._add('params', options);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/query-dsl/constant-score-query/
-    */
-
+     */
 
     QueryDSL.prototype.constant_score = function(options, fun) {
       return this._addWithFunction('constant_score', options, fun);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/query-dsl/custom-boost-factor-query/
-    */
-
+     */
 
     QueryDSL.prototype.custom_boost_factor = function(options, fun) {
       return this._addWithFunction('custom_boost_factor', options, fun);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/query-dsl/dis-max-query/
-    */
-
+     */
 
     QueryDSL.prototype.dis_max = function(options, fun) {
       return this._addWithFunction('dis_max', options, fun);
@@ -514,46 +517,46 @@
       return this._addWithFunction('queries', options, fun, []);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/query-dsl/filtered-query/
-    */
-
+     */
 
     QueryDSL.prototype.filtered = function(options, fun) {
       return this._addWithFunction('filtered', options, fun);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/query-dsl/has-child-query/
-    */
-
+     */
 
     QueryDSL.prototype.has_child = function(options, fun) {
       return this._addWithFunction('has_child', options, fun);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/query-dsl/has-parent-query/
-    */
-
+     */
 
     QueryDSL.prototype.has_parent = function(options, fun) {
       return this._addWithFunction('has_parent', options, fun);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/query-dsl/span-first-query/
-    */
-
+     */
 
     QueryDSL.prototype.span_first = function(options, fun) {
       return this._addWithFunction('span_first', options, fun);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/query-dsl/span-multi-term-query/
-    */
-
+     */
 
     QueryDSL.prototype.span_multi = function(options, fun) {
       return this._addWithFunction('span_multi', options, fun);
@@ -563,10 +566,10 @@
       return this._add('span_term', options, fun);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/query-dsl/span-near-query/
-    */
-
+     */
 
     QueryDSL.prototype.span_near = function(options, fun) {
       return this._addWithFunction('span_near', options, fun);
@@ -576,10 +579,10 @@
       return this._addWithFunction('clauses', options, fun, []);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/query-dsl/span-not-query/
-    */
-
+     */
 
     QueryDSL.prototype.span_not = function(options, fun) {
       return this._addWithFunction('span_not', options, fun);
@@ -593,19 +596,19 @@
       return this._addWithFunction('exclude', options, fun);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/query-dsl/span-or-query/
-    */
-
+     */
 
     QueryDSL.prototype.span_or = function(options, fun) {
       return this._addWithFunction('span_or', options, fun);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/query-dsl/top-children-query/
-    */
-
+     */
 
     QueryDSL.prototype.top_children = function(options, fun) {
       return this._addWithFunction('top_children', options, fun);
@@ -615,17 +618,17 @@
       return this._addWithFunction('nested', options, fun);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/query-dsl/custom-filters-score-query/
-    */
-
+     */
 
     QueryDSL.prototype.custom_filters_score = function(options, fun) {};
 
+
     /*
       http://www.elasticsearch.org/guide/reference/query-dsl/indices-query/
-    */
-
+     */
 
     QueryDSL.prototype.indices = function(options, fun) {
       return this._addWithFunction('indices', options, fun);
@@ -639,163 +642,163 @@
       return this._addWithFunction('filters', options, fun, []);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/query-dsl/and-filter/
-    */
-
+     */
 
     QueryDSL.prototype.and = function(options, fun) {
       return this._addWithFunction('and', options, fun);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/query-dsl/exists-filter/
-    */
-
+     */
 
     QueryDSL.prototype.exists = function(options) {
       return this._add('exist', options);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/query-dsl/limit-filter/
-    */
-
+     */
 
     QueryDSL.prototype.limit = function(options) {
       return this._add('limit', options);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/query-dsl/type-filter/
-    */
-
+     */
 
     QueryDSL.prototype.type = function(options) {
       return this._add('type', options);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/query-dsl/geo-bounding-box-filter/
-    */
-
+     */
 
     QueryDSL.prototype.geo_bounding_box = function(options) {
       return this._add('geo_bounding_box', options);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/query-dsl/geo-distance-filter/
-    */
-
+     */
 
     QueryDSL.prototype.geo_distance = function(options) {
       return this._add('geo_distance', options);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/query-dsl/geo-distance-range-filter/
-    */
-
+     */
 
     QueryDSL.prototype.geo_distance_range = function(options) {
       return this._add('geo_distance_range', options);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/query-dsl/geo-polygon-filter/
-    */
-
+     */
 
     QueryDSL.prototype.geo_polygon = function(options) {
       return this._add('geo_polygon', options);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/query-dsl/missing-filter/
-    */
-
+     */
 
     QueryDSL.prototype.missing = function(options) {
       return this._add('missing', options);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/query-dsl/not-filter/
-    */
-
+     */
 
     QueryDSL.prototype.not = function(options, fun) {
       return this._addWithFunction('not', options, fun);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/query-dsl/numeric-range-filter/
-    */
-
+     */
 
     QueryDSL.prototype.numeric_range = function(options) {
       return this._add('numeric_range', options);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/query-dsl/or-filter/
-    */
-
+     */
 
     QueryDSL.prototype.or = function(options, fun) {
       return this._addWithFunction('or', options, fun);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/query-dsl/script-filter/
-    */
-
+     */
 
     QueryDSL.prototype.script = function(options) {
       return this._add('script', options);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/api/search/facets/histogram-facet/
-    */
-
+     */
 
     QueryDSL.prototype.histogram = function(options) {
       return this._add('histogram', options);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/api/search/facets/date-histogram-facet/
-    */
-
+     */
 
     QueryDSL.prototype.date_histogram = function(options) {
       return this._add('date_histogram', options);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/api/search/facets/statistical-facet/
-    */
-
+     */
 
     QueryDSL.prototype.statistical = function(options) {
       return this._add('statistical', options);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/api/search/facets/terms-stats-facet/
-    */
-
+     */
 
     QueryDSL.prototype.terms_stats = function(options) {
       return this._add('terms_stats', options);
     };
 
+
     /*
       http://www.elasticsearch.org/guide/reference/api/search/facets/geo-distance-facet/
-    */
-
+     */
 
     QueryDSL.prototype.geo_distance = function(options) {
       return this._add('geo_distance', options);
@@ -865,8 +868,7 @@
     };
 
     MappingDSL.create = function(url, json) {
-      var hash,
-        _this = this;
+      var hash;
       this.responce = void 0;
       hash = {};
       hash.url = url;
@@ -875,24 +877,27 @@
       hash.async = false;
       hash.contentType = 'application/json; charset=utf-8';
       hash.data = JSON.stringify(json);
-      hash.success = function(data) {
-        return _this.responce = data;
-      };
+      hash.success = (function(_this) {
+        return function(data) {
+          return _this.responce = data;
+        };
+      })(this);
       Ember.$.ajax(hash);
       return this.responce;
     };
 
     MappingDSL["delete"] = function(url) {
-      var hash,
-        _this = this;
+      var hash;
       this.responce = void 0;
       hash = {};
       hash.url = url;
       hash.type = "DELETE";
       hash.async = false;
-      hash.success = function(data) {
-        return _this.responce = data;
-      };
+      hash.success = (function(_this) {
+        return function(data) {
+          return _this.responce = data;
+        };
+      })(this);
       Ember.$.ajax(hash);
       return this.responce;
     };
@@ -938,8 +943,7 @@
     };
 
     BulkDSL.request = function(options, json) {
-      var hash,
-        _this = this;
+      var hash;
       this.responce = void 0;
       hash = {};
       hash.url = this.url(options);
@@ -948,9 +952,11 @@
       hash.async = false;
       hash.contentType = 'application/json; charset=utf-8';
       hash.data = json.join("\n");
-      hash.success = function(data) {
-        return _this.responce = data;
-      };
+      hash.success = (function(_this) {
+        return function(data) {
+          return _this.responce = data;
+        };
+      })(this);
       Ember.$.ajax(hash);
       return this.responce;
     };
@@ -1002,25 +1008,26 @@
     };
 
     BulkDSL.prototype._createHeader = function(options) {
-      var headers,
-        _this = this;
+      var headers;
       headers = {};
-      ["_type", "_index", "_version", "_routing", "_refresh", "_percolate", "_parent", "_timestamp", "_ttl"].forEach(function(type) {
-        if (_this.meta.indexOf(type) >= 0) {
-          if (!options[type]) {
-            headers[type] = _this[type];
+      ["_type", "_index", "_version", "_routing", "_refresh", "_percolate", "_parent", "_timestamp", "_ttl"].forEach((function(_this) {
+        return function(type) {
+          if (_this.meta.indexOf(type) >= 0) {
+            if (!options[type]) {
+              headers[type] = _this[type];
+            } else {
+              headers[type] = options[type];
+              delete options[type];
+            }
           } else {
-            headers[type] = options[type];
-            delete options[type];
+            if (options[type]) {
+              headers[type] = options[type];
+              delete options[type];
+            }
           }
-        } else {
-          if (options[type]) {
-            headers[type] = options[type];
-            delete options[type];
-          }
-        }
-        return headers._id = options.id;
-      });
+          return headers._id = options.id;
+        };
+      })(this));
       return headers;
     };
 
