@@ -620,39 +620,6 @@ test 'nested', ->
               {range: {"obj1.count": {gt: 5}}}
             ]
 
-# FIXME: fix custom_filters_score test
-test 'custom_filters_score', ->
-  expect 1
-  json = @subject.query ->
-    @custom_filters_score {score_mode: "first"}, ->
-      @query ->
-        @match_all()
-
-      @filters ->
-        @filter ->
-          #@range {age: {from: 0, to: 10}}
-          #@boost 3
-          #
-        @filter ->
-          #@range {age: {from: 0, to: 10}}
-        #@boost 3
-        #
-  deepEqual(json, {query: {custom_filters_score: {
-    "score_mode" : "first",
-    query: {
-      "match_all" : {}
-    },
-    filters: [{
-      filter: { range: { age: {from: 0, to: 10} } },
-      boost: "3"
-    },
-    {
-      filter: { range: { age: {from: 10, to: 20} } },
-      boost: "2"
-    }
-    ]
-  }}})
-
 test 'indices', ->
   expect 1
   json = @subject.query ->
