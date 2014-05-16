@@ -2,6 +2,7 @@ ember-data-elasticsearch-kit
 ============================
 
 You're able to use this library as `ember-data` adapter for working with `elasticsearch` appliance.
+Works with elasticsearch v1.1.1.
 
 Moreover, this library ships with useful DSL conviniences for creating `mappings` and `queries` and many other features such as `bulk` and so on.
 
