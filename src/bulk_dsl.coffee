@@ -16,6 +16,7 @@ class EDEK.BulkDSL
     hash.async = false
     hash.contentType = 'application/json; charset=utf-8'
     hash.data = json.join("\n")
+    hash.data = "#{hash.data}\n"
     hash.success = (data) => @responce = data
     Ember.$.ajax(hash)
     @responce
