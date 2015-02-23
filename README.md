@@ -9,52 +9,49 @@ Moreover, this library ships with useful DSL conviniences for creating `mappings
 Let's consider some partials from `spec/mapping_dsl_spec.coffee`:
 
 ```coffee
-  beforeEach ->
+module "MappingDSL",
+  setup: ->
     @subject = EDEK.MappingDSL
 
-  it "creates simpe mapping in general", ->
-    mapping = @subject.mapping ->
-      @mapping "user", ->
-        @mapping "firstName", type: "string"
-        @mapping "lastName", type: "string"
+test "create simpe mapping", ->
+  expect 1
+  mapping = @subject.mapping ->
+    @mapping "user", ->
+      @mapping "firstName", type: "string"
+      @mapping "lastName", type: "string"
+  deepEqual mapping,
+    mappings:
+      user:
+        properties:
+          firstName:
+            type: "string"
+          lastName:
+            type: "string"
 
-    expect(mapping).toEqual({
-      mappings: {
-        user: {
-          properties:{
-            firstName: {type: "string"},
-            lastName: {type: "string"}
-          }
-        }
-      }
-    })
-
-   it 'creates nested mapping', ->
-    mapping = @subject.mapping ->
-      @mapping "user", ->
-        @mapping "firstName", type: "string"
-        @mapping "lastName", type: "string"
-        @mapping "avatar", type: "nested", ->
-          @mapping "id", type: "long"
-          @mapping "url", type: "string"
-
-    expect(mapping).toEqual({
-      mappings: {
-        user: {
-          properties: {
-            firstName: {type: "string"},
-            lastName: {type: "string"},
-            avatar: {
-              type: "nested",
-              properties: {
-                id: {type: "long"},
-                url: {type: "string"}
-              }
-            }
-          }
-          }
-        }
-    })
+test "create mapping with nested", ->
+  expect 1
+  mapping = @subject.mapping ->
+    @mapping "user", ->
+      @mapping "firstName", type: "string"
+      @mapping "lastName", type: "string"
+      @mapping "avatar", type: "nested", ->
+        @mapping "id", type: "long"
+        @mapping "url", type: "string"
+  deepEqual mapping,
+    mappings:
+      user:
+        properties:
+          firstName:
+            type: "string"
+          lastName:
+            type: "string"
+          avatar:
+            type: "nested"
+            properties:
+              id:
+                type: "long"
+              url:
+                type: "string"
 ```
 
 Other things and examples you could dig from `spec`s directory.
@@ -62,10 +59,17 @@ Other things and examples you could dig from `spec`s directory.
 Instalation
 ===========
 
-```bash
-wget -O ember-data-elasticsearch-kit.min.js http://goo.gl/VXlbXx
+Install with bower
+------------------
+
+```
+bower install ember-data-elasticsearch-kit
 ```
 
+Ready to use as a regular JS assets
+-----------------------------------
+
+An `ember-data-elasticsearch-kit` ships with compiled assets which is plased in `dist` directory.
 
 MIT License
 ===========
