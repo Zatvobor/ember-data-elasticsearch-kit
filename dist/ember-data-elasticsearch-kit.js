@@ -952,7 +952,6 @@
       hash.async = false;
       hash.contentType = 'application/json; charset=utf-8';
       hash.data = json.join("\n");
-      hash.data = "" + hash.data + "\n";
       hash.success = (function(_this) {
         return function(data) {
           return _this.responce = data;
