@@ -1,0 +1,17 @@
+{
+  "name": "ember-data-elasticsearch-kit",
+  "version": "1.0.0",
+  "main": "dist/ember-data-elasticsearch-kit.min.js",
+  "description": "An ember-data kit for pushing and querying objects to Elasticsearch appliance",
+  "repository": {
+    "type": "git", "url": "git://github.com/zatvobor/ember-data-elasticsearch-kit.git"
+  },
+  "ignore": [
+    "Gruntfile.js", "package.json", "spec", "src"
+  ],
+  "dependencies": {
+    "ember": "~1.5.1",
+    "ember-data": "1.0.0-beta.7",
+    "qunit": "~1.14.0"
+  }
+}
