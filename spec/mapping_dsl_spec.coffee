@@ -2,13 +2,13 @@ module "MappingDSL",
   setup: ->
     @subject = EDEK.MappingDSL
 
-test "create simpe mapping", ->
+test "create simple mapping", ->
   expect 1
   mapping = @subject.mapping ->
     @mapping "user", ->
       @mapping "firstName", type: "string"
       @mapping "lastName", type: "string"
-  
+
   deepEqual mapping,
     mappings:
       user:

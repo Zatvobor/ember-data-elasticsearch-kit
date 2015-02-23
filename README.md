@@ -1,19 +1,19 @@
 ember-data-elasticsearch-kit
 ============================
 
-You're able to use this library as `ember-data` adapter for working with `elasticsearch` appliance.
-Works with elasticsearch v1.1.1.
+_This alpha-level software tested on elasticsearch `v1.1.1`._
 
-Moreover, this library ships with useful DSL conviniences for creating `mappings` and `queries` and many other features such as `bulk` and so on.
 
-Let's consider some partials from `spec/mapping_dsl_spec.coffee`:
+This library ships with useful DSL conveniences for creating `mappings`, `queries` and doing `bulk` payload.
+
+Let's take a look at `spec/mapping_dsl_spec.coffee`:
 
 ```coffee
 module "MappingDSL",
   setup: ->
     @subject = EDEK.MappingDSL
 
-test "create simpe mapping", ->
+test "create simple mapping", ->
   expect 1
   mapping = @subject.mapping ->
     @mapping "user", ->
@@ -54,13 +54,11 @@ test "create mapping with nested", ->
                 type: "string"
 ```
 
-Other things and examples you could dig from `spec`s directory.
+Other things and examples you can dig from `spec`s directory.
 
-Instalation
-===========
 
-Install with bower
-------------------
+Installation
+============
 
 ```
 bower install ember-data-elasticsearch-kit
@@ -69,14 +67,15 @@ bower install ember-data-elasticsearch-kit
 Ready to use as a regular JS assets
 -----------------------------------
 
-An `ember-data-elasticsearch-kit` ships with compiled assets which is plased in `dist` directory.
+An `ember-data-elasticsearch-kit` ships with compiled assets which is placed in `dist` directory.
+
 
 MIT License
 ===========
 
 The MIT License (MIT)
 
-Copyright (c) 2013 Roundscope
+Copyright (c) 2013 by Aleksey Zatvobor
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
