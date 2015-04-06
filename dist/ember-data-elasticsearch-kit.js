@@ -1,6 +1,6 @@
 (function() {
   window.EDEK = window.EmberDataElasticsearchKit = Ember.Namespace.create({
-    VERSION: '1.0.0'
+    VERSION: '1.0.1'
   });
 
 }).call(this);
@@ -50,7 +50,7 @@
         if (adapter.headers) {
           headers = adapter.headers;
           hash.beforeSend = function(xhr) {
-            return forEach.call(Ember.keys(headers), function(key) {
+            return Ember.keys(headers).forEach(function(key) {
               return xhr.setRequestHeader(key, headers[key]);
             });
           };

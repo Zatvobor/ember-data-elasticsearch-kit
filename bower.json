@@ -1,6 +1,6 @@
 {
   "name": "ember-data-elasticsearch-kit",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "dist/ember-data-elasticsearch-kit.min.js",
   "description": "An ember-data kit for pushing and querying objects to Elasticsearch appliance",
   "repository": {
